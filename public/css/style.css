@@ -1,0 +1,97 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 2. v2.0 | 20110126
+  License: none (public domain)
+*/
+html, body {min-height:100%; padding:0; margin:0;}
+
+#heardertext{
+  text-align: center;
+}
+#headerimage{
+    text-align: center;
+}
+
+.jumbotron {
+  background: url('./images/aa-logo-2.png') center center no-repeat;
+
+  background-size: contain;
+    background-position: center; 
+}
+
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+
+  display: flex;
+  align-items: center;
+}
+
+#header {
+    background-color:white;
+    height:50px;
+    margin: auto;
+    /*padding:5px;*/
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+}
+
+#divdatatable{
+  padding-top:50px;
+  margin-top: 100px;
+}
+
+.to-align{ 
+  margin-left:500 px;
+}
+
+#comment-box {
+  position: fixed; /* or absolute */
+  top: 45%;
+  left: 45%;
+  color: white;
+  text-align: center;
+  font-size: 250%;
+  width: 300px;
+  height: 100px;
+}
+
+
+.form-horizontal{
+  padding-top:50px;
+}
+
+.info{
+  padding-top: 20px;
+}
+
+.centered-pills {  
+    text-align: center
+}
+.centered-pills ul.nav-pills {
+    display: inline-block
+}
+.centered-pills li {
+    display: inline
+}
+.centered-pills a {
+    float: left
+}
+* html .centered-pills ul.nav-pills, *+html .centered-pills ul.nav-pills {
+    display: inline
+}
+.lic-info{
+  padding-top: 10px;
+}
+.info{
+  padding-top: 60px;
+}
+.validate{
+  text-align: center;
+  padding-top:60px;
+
+}
+.btn-group{
+    padding-top:40px ;
+    margin: 0 auto; 
+    text-align: center;
+    display: inline-block;
+}
+
