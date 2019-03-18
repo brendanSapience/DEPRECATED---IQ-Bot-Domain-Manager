@@ -1,1 +1,6 @@
-{"titleid1":"P.O. #","titleid2":"PO Date","titleid3":"PO Total","titleid4":"Vendor Name","titleid5":"Index","titleid6":"Total"}
+{
+  "url": "riotinto.automationanywhere.digital:3000",
+  "major_version": "5",
+  "login": "client",
+  "password": "12345678"
+}
