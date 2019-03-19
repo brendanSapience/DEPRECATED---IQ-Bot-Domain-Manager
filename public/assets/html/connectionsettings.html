@@ -29,6 +29,7 @@
 <div class="form-group">
 <label for="pwd"></label>
 	<button id="savebutton" type="button" class="btn btn-info">Save</button>
+	<button id="testbutton" type="button" class="btn btn-info">Test</button>
 </div>
 
 </div>
@@ -50,6 +51,24 @@ $(this).ready(function(){
 	$('#testid li').on('click', function() {
 	    $('#dropdown_title').html($(this).find('a').html());
 	});
+
+	$('#savebutton').on('click', function() {
+	    socket.emit('save_structure',
+	    	{
+  				"url": $('#iqboturl').val(),
+  				"major_version": $('#dropdown_title').text(),
+  				"login": $('#iqbotlogin').val(),
+  				"password": $('#iqbotpassword').val()
+			}
+		);
+	});
+
+	$('#testbutton').on('click', function() {
+		socket.emit('test_iqbot_connection',
+	    	{}
+		);
+	});
+
 
 	socket.emit('get_structure',{});
 	console.log("Loaded!");
