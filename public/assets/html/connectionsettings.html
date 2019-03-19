@@ -30,7 +30,24 @@
 <label for="pwd"></label>
 	<button id="savebutton" type="button" class="btn btn-info">Save</button>
 	<button id="testbutton" type="button" class="btn btn-info">Test</button>
+
+
 </div>
+
+<div class="form-group">
+
+	
+<div id="connOK" style="display: none" class="alert alert-success" role="alert">
+  <p>Connection Successful</p>
+</div>
+
+<div id="connFAIL" style="display: none" class="alert alert-danger" role="alert">
+  <p>Connection Fail</p>
+</div>
+
+	
+</div>
+
 
 </div>
 
@@ -88,6 +105,26 @@ function setSocketListeners(){
 		//$('#iqbotlogin').text(result["login"]);
 
 	});
+
+	socket.on('auth_response',function(result){
+
+		console.log(result);
+
+		//var IsOK = JSON.parse(result);
+		var IsOK = JSON.parse(result);
+
+		if(IsOK['success']){
+			$('#connOK').show();
+		}else{
+			$('#connFAIL').show();
+		}
+		//
+		
+
+		//$('#iqbotlogin').text(result["login"]);
+
+	});
+
 };
 
 </script>
