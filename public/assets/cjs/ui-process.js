@@ -4,7 +4,7 @@ $(document).ready(function(){
 
 	$('.connectionsettings').hide();
 	$('.editdomains').hide();
-	$('.createdomains').hide();
+	$('.createdomains').show();
 
 
 	// When html page loads, retrieve the content of the JSON file that determines the labels for each field.
@@ -12,9 +12,9 @@ $(document).ready(function(){
 
 	// When clicking the Save Fields button, save the labels as a JSON structure and override the existing one (by passing it to the server)
 	$('#CreateDomainButton').click( function(e) { 
-			$('#CreateDomainButton').addClass('active');
-			$('#EditDomainButton').removeClass('active');
-			$('#ConnectionSettings').removeClass('active');
+			$('#CreateDomainButton a').addClass('active');
+			//$('#EditDomainButton').removeClass('active');
+			$('#ConnectionSettings a').removeClass('active');
 
 			$('.createdomains').show();
 			$('.connectionsettings').hide();
@@ -23,19 +23,19 @@ $(document).ready(function(){
 	});
 
 	$('#EditDomainButton').click( function(e) { 
-			$('#EditDomainButton').addClass('active');
-			$('#CreateDomainButton').removeClass('active');
-			$('#ConnectionSettings').removeClass('active');
+			$('#EditDomainButton a').addClass('active');
+			$('#CreateDomainButton a').removeClass('active');
+			$('#ConnectionSettings a').removeClass('active');
 
 			$('.createdomains').hide();
 			$('.connectionsettings').hide();
 			$('.editdomains').show();
 	});
 
-	$('#ConnectionSettings').click( function(e) { 
-			$('#ConnectionSettings').addClass('active');
-			$('#CreateDomainButton').removeClass('active');
-			$('#EditDomainButton').removeClass('active');
+	$('#ConnectionSettings a').click( function(e) { 
+			$('#ConnectionSettings a').addClass('active');
+			$('#CreateDomainButton a').removeClass('active');
+			//$('#EditDomainButton').removeClass('active');
 
 			$('.createdomains').hide();
 			$('.connectionsettings').show();

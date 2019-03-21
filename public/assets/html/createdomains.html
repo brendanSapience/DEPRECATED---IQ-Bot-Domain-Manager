@@ -1,19 +1,32 @@
 
-
-<div>
-<h3 class="sub-header">Create an IQ Bot Domain</h3> 
-
-
-<div class="input-group mb-3">
-  <div class="input-group-prepend">
-    <span class="input-group-text" id="inputGroupFileAddon01">Upload Domain File (Json)</span>
-  </div>
+<div class="container">
+  <div class="row">
+  	<div class="col-sm">
+<div class="input-group">
+  <form>
   <div class="custom-file">
-    <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+    <input type="file" class="custom-file-input" id="customFile">
+    <label class="custom-file-label" for="customFile">Choose file</label>
   </div>
+</form>
+</div>
+</div>
+</div>
+
+<div class="row pt-5">
+	<div class="input-group">
+	  <textarea id="jsonpreviewarea" class="span10" rows="100" placeholder="Some Text" required></textarea>
+	</div>
 </div>
 
 
-</div>
+<script>
+// Add the following code if you want the name of the file appear on select
+$(".custom-file-input").on("change", function() {
+	var FullFileName = $(this).val();
+  var fileName = $(this).val().split("\\").pop();
+  $(this).siblings(".custom-file-label").addClass("selected").html(fileName.substring(0,29));
+  $('#jsonpreviewarea').val(FullFileName);
 
+});
+</script>
