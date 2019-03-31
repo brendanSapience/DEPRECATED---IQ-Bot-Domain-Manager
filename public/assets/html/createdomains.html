@@ -35,6 +35,7 @@
 		</h5>
 	</div>
 
+
 	<div class="form-group form-inline">
   		<h5><label for="usr">Add Field: </label></h5>
 		<input type="text" class="input-lg form-control" id="new_field_name">
@@ -42,6 +43,7 @@
 	</div>
 
 	<div class="form-group form-inline">
+		
 						<table class="table" id="field_list_table">
 						  <thead>
 						    <tr>
@@ -53,31 +55,26 @@
 						    </tr>
 						  </thead>
 						  <tbody>
+
+						  	<!--
 						    <tr>
-						    	<td><button id="remove_field" type="button" class="btn btn-danger btn-sm">Delete</button></td>
+						      <td><button id="remove_field" type="button" class="btn btn-danger btn-sm delete_field">Delete</button></td>
 						      <td scope="row"><h5>Invoice Number</h5></td>
 						      <td>
-						      	<div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
-								  <label class="btn btn-secondary active">
-								    <input type="radio" name="options" id="std_field" autocomplete="off" checked> Standard Field
-								  </label>
-								  <label class="btn btn-secondary">
-								    <input type="radio" name="options" id="table_field" autocomplete="off"> Table Field
-								  </label>
-								</div>
+									<select class="form-control" id="dropdownMenuButton0">
+									<option>Standard</option>
+									<option>Table</option>
+									</select>
 						      </td>
+
 						      <td>
-						      		<div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
-					  				<label class="btn btn-secondary active">
-									    <input type="radio" name="options" id="std_field" autocomplete="off" checked> Text
-									  </label>
-									  <label class="btn btn-secondary">
-									    <input type="radio" name="options" id="table_field" autocomplete="off"> Number
-									  </label>
-									  <label class="btn btn-secondary">
-									    <input type="radio" name="options" id="table_field" autocomplete="off"> Date
-									  </label>
-									</div>
+								  	<select class="form-control" id="dropdownMenuButton0">
+									<option>Text</option>
+									<option>Date</option>
+									<option>Number</option>
+									</select>
+
+								</div>
 						      </td>
 
 						      <td>
@@ -87,54 +84,16 @@
 								</div>
 						      </td>
 						    </tr>
-						    						    <tr>
-						    	<td><button id="remove_field" type="button" class="btn btn-danger btn-sm">Delete</button></td>
-						      <td scope="row"><h5>Invoice Date</h5></td>
-						      <td>
-						      	<div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
-								  <label class="btn btn-secondary active">
-								    <input type="radio" name="options" id="std_field" autocomplete="off" checked> Standard Field
-								  </label>
-								  <label class="btn btn-secondary">
-								    <input type="radio" name="options" id="table_field" autocomplete="off"> Table Field
-								  </label>
-								</div>
-						      </td>
-						      <td>
-						      		<div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
-					  				<label class="btn btn-secondary active">
-									    <input type="radio" name="options" id="std_field" autocomplete="off" checked> Text
-									  </label>
-									  <label class="btn btn-secondary">
-									    <input type="radio" name="options" id="table_field" autocomplete="off"> Number
-									  </label>
-									  <label class="btn btn-secondary">
-									    <input type="radio" name="options" id="table_field" autocomplete="off"> Date
-									  </label>
-									</div>
-						      </td>
-
-						      <td>
-								<div>
-									<input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-									
-								</div>
-						      </td>
-						    </tr>
-						   
-	
+						-->
 						  </tbody>
 						</table>
-					
-
-
 	</div>
 
 	<div class="form-group form-inline">
 		
     		<div class="col-md-12">
 
-		<table class="table">
+		<table class="table" id="field_alias_table">
 			<thead>
 			<tr>
 				<th scope="col">Field Name</th>
@@ -142,6 +101,7 @@
 			</tr>
 			</thead>
 			<tbody>
+				<!--
 				<tr>
 					<td scope="row" ><h5>Invoice Number</h5></td>
 					<td scope="row" >
@@ -151,21 +111,21 @@
 									<div class="input-group">
 								  		<h6><label class="label_left" for="usr">English: </label></h6>
 								  		
-								  		<input type="text" class="test input " id="" value="invoice #|Invoice Number|My Invoice N:">
+								  		<input type="text" class="test input " id="f" value="invoice #|Invoice Number|My Invoice N:">
 								  	</div>
 								</li>
 								<li class="list-inline-item">
 									<div class="input-group">
 								  		<h6><label class="label_left" for="usr">French: </label></h6>
 								  		
-								  		<input type="text" class="test input" id="" value="Facture|Facture Num:|Numero de facture">
+								  		<input type="text" class="test input" id="e" value="Facture|Facture Num:|Numero de facture">
 								  	</div>
 								</li>
 								<li class="list-inline-item">
 									<div class="input-group">
 								  		<h6><label class="label_left" for="usr">Spanish: </label></h6>
 								  		
-								  		<input type="text" class="test input" id="" value="Facture|Facture Num:|Numero de facture">
+								  		<input type="text" class="test input" id="d" value="Facture|Facture Num:|Numero de facture">
 								  	</div>
 								</li>
 							</ul>  
@@ -173,42 +133,14 @@
 	
 								
 					</td>
-				</tr>
-				<tr>
-					<td scope="row" ><h5>Invoice Date</h5></td>
-					<td scope="row" >
-						
-						    <ul id="mylist" class="list-inline">
-								<li class="list-inline-item">
-									<div class="input-group">
-								  		<h6><label class="label_left" for="usr">English: </label></h6>
-								  		
-								  		<input type="text" class="input test" id="" value="invoice #|Invoice Number|My Invoice N:">
-								  	</div>
-								</li>
-								<li class="list-inline-item">
-									<div class="input-group">
-								  		<h6><label class="label_left" for="usr">French: </label></h6>
-								  		
-								  		<input type="text" class="input test" id="" value="Facture|Facture Num:|Numero de facture">
-								  	</div>
-								</li>
-								<li class="list-inline-item">
-									<div class="input-group">
-								  		<h6><label class="label_left" for="usr">Spanish: </label></h6>
-								  		
-								  		<input type="text" class="input test" id="" value="Facture|Facture Num:|Numero de facture">
-								  	</div>
-								</li>
-							</ul>  
-						
-	
-								
-					</td>
-				</tr>
+				</tr>-->
+				
 			</tbody>
 		</table>
 	</div>
+	<div class="form-group form-inline">
+	<button id="create_domain" type="button" class="btn ml-3 btn-info btn-xlarge">Create Domain</button>
+  	</div>
 
 </div>
 
@@ -218,87 +150,6 @@
 </div>
 </div>
 </div>
-
-<!--
-<div class="row pt-5">
-	<div class="input-group">
-	  <textarea id="jsonpreviewarea" class="span10" rows="100" placeholder="Some Text" required></textarea>
-	</div>
-</div>
--->
-
-<script>
-$(this).ready(function(){
-// Add the following code if you want the name of the file appear on select
-$(".custom-file-input").on("change", function() {
-	var FullFileName = $(this).val();
-  var fileName = $(this).val().split("\\").pop();
-  $(this).siblings(".custom-file-label").addClass("selected").html(fileName.substring(0,29));
-  $('#jsonpreviewarea').val(FullFileName);
-
-});
-
-$("#add_lang").on("click", function() {
-
-	if (!$('#'+$('#lang_selection').val()+'').length) {
-    	$('#lang_badges h5 ul').append('<li class="list-inline-item" href="#"><span id="'+$('#lang_selection').val()+'" class="badge badge-success badge_lang">'+$('#lang_selection').val()+'</span></li>');
-	}
-});
-
-$("#add_field").on("click", function() {
-	console.log("SDFSDF");
-	$('#field_list_table tbody').append(
-		'<tr>'+
-		'<td><button id="remove_field" type="button" class="btn btn-danger btn-sm">Delete</button></td>'+
-		'<td scope="row"><h5>'+$('#new_field_name').val()+'</h5></td>'+
-		'<td>'+
-		'<div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">'+
-		'<label class="btn btn-secondary active">'+
-		'<input type="radio" name="options" id="std_field" autocomplete="off" checked> Standard Field'+
-		'</label>'+
-		'<label class="btn btn-secondary">'+
-		'<input type="radio" name="options" id="table_field" autocomplete="off"> Table Field'+
-		'</label>'+
-		'</div>'+
-		'</td>'+
-		'<td>'+
-		'<div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">'+
-		'<label class="btn btn-secondary active">'+
-		'<input type="radio" name="options" id="std_field" autocomplete="off" checked> Text'+
-		'</label>'+
-		'<label class="btn btn-secondary">'+
-		'<input type="radio" name="options" id="table_field" autocomplete="off"> Number'+
-		'</label>'+
-		'<label class="btn btn-secondary">'+
-		'<input type="radio" name="options" id="table_field" autocomplete="off"> Date'+
-		'</label>'+
-		'</div>'+
-		'</td>'+
-		'<td>'+
-		'<div>'+
-		'<input class="form-check-input" type="checkbox" value="" id="defaultCheck1">'	+
-		'</div>'+
-		'</td>'+
-		'</tr>'
-
-
-		);
-
-});
-
-$("#lang_badges h5 ul").on("click","li", function() {
-	
-	$(this).remove();
-});
-
-});
-
-
-</script>
-
-
-
-
 
 
 
