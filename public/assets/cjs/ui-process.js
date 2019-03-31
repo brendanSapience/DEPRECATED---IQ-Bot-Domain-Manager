@@ -35,11 +35,10 @@ $(document).ready(function(){
 	$('#ConnectionSettings a').click( function(e) { 
 			$('#ConnectionSettings a').addClass('active');
 			$('#CreateDomainButton a').removeClass('active');
-			//$('#EditDomainButton').removeClass('active');
-
+	
 			$('.createdomains').hide();
 			$('.connectionsettings').show();
-			//$('.connectionsettings').load('../assets/html/connectionsettings.html');
+			
 			$('.editdomains').hide();
 
 

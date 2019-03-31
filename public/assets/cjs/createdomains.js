@@ -1,10 +1,65 @@
+function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+
+function getPositionOfId(dictionary, idToFind){
+	//int Pos = -1;
+	var idx = 0;
+	for(var entry of dictionary){
+		//console.log("DEBUG:"+entry.id+":"+idToFind+":");
+    	if(entry.id == idToFind){
+    		//console.log("IN!");
+    		return idx;
+    		//break;
+    	}
+    	//console.log("up");
+    	idx++;
+	}
+
+	return -1;
+}
+
+function getNameFromId(dictionary, idToFind){
+	//int Pos = -1;
+	//var idx = 0;
+	for(var entry of dictionary){
+		//console.log("DEBUG:"+entry.id+":"+idToFind+":");
+    	if(entry.id == idToFind){
+    		//console.log("IN!");
+    		return entry.name;
+    		//break;
+    	}
+    	//console.log("up");
+    	//idx++;
+	}
+
+	return "";
+}
+
+
 $(document).ready(function(){
+
+var FieldDictionary = [];
 
 $("#create_domain").on("click",function(){
 	var dom = new Object();
 	dom.name = "";
 	dom.languages = [];
 	dom.fields = [];
+
+	if(!/^(?!\d)[A-Za-z0-9 _]*$/.test($('#domain_name').val())){
+		console.log("Error in Domain Name!");
+
+	}else{
 
 	// Populate Domain Name
 	dom.name = $('#domain_name').val();
@@ -19,6 +74,8 @@ $("#create_domain").on("click",function(){
 	// Populate each Field
 	$('#field_list_table tbody').find('tr').each(function(){
 		var myFieldInfo = new Object();
+
+		var MasterID = $(this).attr('id');
 
 		var fieldname = $(this).find('td.field_name').text();
 		var fieldtype = $(this).find('td.field_type').find('select').val();
@@ -40,17 +97,18 @@ $("#create_domain").on("click",function(){
 
 		$('#field_alias_table tbody').find('tr').each(function(){
 			var rId = $(this).attr('id');
-			var FieldID = fieldname.replace(/\s/g, '');
-			console.log("Debug :"+rId + " - "+FieldID);
-			var oneAlias = new Object();
+			var rIdNum = rId.split("_")[0];
+			//var FieldID = fieldname.replace(/\s/g, '');
+			var FieldName = getNameFromId(FieldDictionary,rId);
 
-			if(rId == FieldID+"_AliasTable"){
+			//console.log("Debug :"+rIdNum + " - "+MasterID);
+			
+
+			if(rIdNum == MasterID){
 				$('#'+rId).find('ul').find('li').each(function(){
+					var oneAlias = new Object();
 					var MyLanguage = $(this).find(".lang_aliases").attr('lang');
 					var MyAliases = $(this).find(".all_aliases").val();
-
-					console.log("Finding Language: "+MyLanguage);
-					
 
 					oneAlias.language = MyLanguage;
 					if(MyAliases != ""){
@@ -61,7 +119,7 @@ $("#create_domain").on("click",function(){
 
 
 
-					console.log("Debug: "+MyAliases + " - For: "+MyLanguage);
+					//console.log("Debug: "+MyAliases + " - For: "+MyLanguage);
 					myFieldInfo.aliases.push(oneAlias);
 
 				});
@@ -78,12 +136,16 @@ $("#create_domain").on("click",function(){
 
 
 	});
-
+	
+	var text = JSON.stringify(dom);
+    var filename = "domain.json";
+    
+    download(filename, text);
 	console.log(dom);
+	}
+
 
 });
-
-
 
 	// removing Language Badges
 	$("#lang_badges h5 ul").on("click","li", function() {
@@ -91,41 +153,34 @@ $("#create_domain").on("click",function(){
 		// when language is removed, need to go through alias table and remove languages
 	});
 
-
 	// adding language badges
 	$("#add_lang").on("click", function() {
 
 		if (!$('#'+$('#lang_selection').val()+'').length) {
-    			$('#lang_badges h5 ul').append('<li class="list-inline-item" href="#"><span id="'+$('#lang_selection').val()+'" class="badge badge-success badge_lang">'+$('#lang_selection').val()+'</span></li>');
+
+			var BadgeID = $('#lang_selection').val();
+    		$('#lang_badges h5 ul').append('<li class="list-inline-item" href="#"><span id="'+BadgeID+'" class="badge badge-success badge_lang">'+BadgeID+'</span></li>');
 		
-    	var BadgeID = $('#lang_selection').val();
-		// for each TR in the alias table (ie: for each data point)
-		$('#field_alias_table tbody').find('tr').each(function(){
+			// for each TR in the alias table (ie: for each data point)
+			$('#field_alias_table tbody').find('tr').each(function(){
 
-			var FieldID = $(this).attr('id');
-			var IdOfRow = $(this).find('ul').attr('id');
-			console.log("DEBUG Row:"+IdOfRow);
+				var FieldID = $(this).attr('id');
+				var IdOfRow = $(this).find('ul').attr('id');
+				//console.log("DEBUG Row:"+IdOfRow);
 
-			var IntID = BadgeID+"_"+FieldID;
+				var IntID = BadgeID+"_"+FieldID;
 
-			$(this).find('ul').append(
+				$(this).find('ul').append(
 						'<li class="list-inline-item" id="'+IntID+'_LI">'+
 							'<div class="input-group">'+
 								'<h6><label class="label_left" lang="'+BadgeID+'" for="usr">'+BadgeID+': </label></h6>'+
-								  		
-								'<input type="text" class="test input " id="'+IntID+'" value="">'+
+								'<input type="text" class="test input all_aliases" id="'+IntID+'" value="">'+
 							'</div>'+
 						'</li>'
-
-
 				);
 		});
 					
 		}
-
-
-
-
 	});
 
 	// Deleting Data points
@@ -133,80 +188,78 @@ $("#create_domain").on("click",function(){
 		var FieldID = $(this).closest('tr').attr('id');
 		$('#'+FieldID+'_AliasTable').remove();
 		$(this).closest('tr').remove();
-
-
+		var Pos = getPositionOfId(FieldDictionary,FieldID);
+		//console.log("Pos:"+Pos);
+		FieldDictionary.splice(Pos, 1);
 	});
 
 	// adding a data point
 	$("#add_field").on("click", function() {
+		var aMap = new Object();
 
-		var LName = $('#new_field_name').val().toLowerCase();
-		var FieldID = LName.replace(/\s/g, '');
+		// cant start with a number and can only have letters, numbers and spaces
+		if(!/^(?!\d)[A-Za-z0-9 _]*$/.test($('#new_field_name').val())){
+			console.log("Error in Field Name!!");
+			// should add a popup to notify of error
+		}else{
+			aMap.name = $('#new_field_name').val();
+			aMap.id = (new Date).getTime();;
 
-		if (!$('#'+FieldID).length) {
+			Boolean = AlreadyExists = false;
+			FieldDictionary.forEach(function(entry) {
+
+    			if(entry.name == aMap.name){
+    				AlreadyExists = true;
+    			}
+			});
+
+		if(!AlreadyExists){
+
+			FieldDictionary.push(aMap);
+			$('#field_list_table tbody').append(
+				'<tr id="'+aMap.id+'">'+
+					'<td><button id="remove_field" type="button" class="btn btn-danger btn-sm delete_field">Delete</button></td>'+
+					'<td scope="row" class="field_name"><h5>'+aMap.name+'</h5></td>'+
+					'<td class="field_type">'+
+						'<select class="form-control" id="dropdownMenuButton0">'+
+							'<option>Standard</option>'+
+							'<option>Table</option>'+
+						'</select>'+
+					'</td>'+
+
+					'<td class="field_data_type">'+
+						'<select class="form-control" id="dropdownMenuButton0">'+
+						'<option>Text</option>'+
+						'<option>Date</option>'+
+						'<option>Number</option>'+
+						'</select>'+
+
+						//'</div>'+
+					'</td>'+
+
+					'<td class="is_default">'+
+						'<div>'+
+							'<input class="form-check-input is_default_chkbox" type="checkbox" value="" id="defaultCheck1" checked>'+					
+						'</div>'+
+					'</td>'+
+				'</tr>'
+			);
 
 
-		$('#field_list_table tbody').append(
+			$('#field_alias_table tbody').append(
 
 
-			'<tr id="'+FieldID+'">'+
-				'<td><button id="remove_field" type="button" class="btn btn-danger btn-sm delete_field">Delete</button></td>'+
-				'<td scope="row" class="field_name"><h5>'+$('#new_field_name').val()+'</h5></td>'+
-				'<td class="field_type">'+
-					'<select class="form-control" id="dropdownMenuButton0">'+
-						'<option>Standard</option>'+
-						'<option>Table</option>'+
-					'</select>'+
-				'</td>'+
-
-				'<td class="field_data_type">'+
-					'<select class="form-control" id="dropdownMenuButton0">'+
-					'<option>Text</option>'+
-					'<option>Date</option>'+
-					'<option>Number</option>'+
-					'</select>'+
-
-					//'</div>'+
-				'</td>'+
-
-				'<td class="is_default">'+
-					'<div>'+
-						'<input class="form-check-input is_default_chkbox" type="checkbox" value="" id="defaultCheck1" checked>'+					
-					'</div>'+
-				'</td>'+
-			'</tr>'
-		);
-
-
-				$('#field_alias_table tbody').append(
-
-
-					'<tr id="'+FieldID+'_AliasTable'+'">'+
-					'<td scope="row" ><h5>'+$('#new_field_name').val()+'</h5></td>'+
-					'<td scope="row" class="AliasInfo">'+
+				'<tr id="'+aMap.id+'_AliasTable'+'">'+
+				'<td scope="row" ><h5>'+aMap.name+'</h5></td>'+
+				'<td scope="row" class="AliasInfo">'+
 						
-						    '<ul id="'+FieldID+'_AliasLanguageList" class="list-inline cust_aliasfield">'+
-								//'<li class="list-inline-item">'+
-								//'<div class="input-group">'+
-								//  		'<h6><label class="label_left" for="usr">English: </label></h6>'+
-								  		
-								//  		'<input type="text" class="test input " id="f" value="invoice #|Invoice Number|My Invoice N:">'+
-								//  	'</div>'+
-								//'</li>'+
-
-								//'<li class="list-inline-item">'+
-								//	'<div class="input-group">'+
-								//  		'<h6><label class="label_left" for="usr">Spanish: </label></h6>'+
-								  		
-								 // 		'<input type="text" class="test input" id="d" value="Facture|Facture Num:|Numero de facture">'+
-								//  	'</div>'+
-								//'</li>'+
+					'<ul id="'+aMap.id+'_AliasLanguageList" class="list-inline cust_aliasfield">'+
 
 
-							'</ul>'+ 
+					'</ul>'+ 
 
-						      '</td>'+
-						    '</tr>'
+				'</td>'+
+				'</tr>'
 				);
 
 				$('#lang_badges').find('li').each(function(){
@@ -214,9 +267,9 @@ $("#create_domain").on("click",function(){
 					var BadgeID = $(this).find('span').attr('id');
 
 		            //console.log("gaga?:"+BadgeID);
-					var IntID = BadgeID+"_"+FieldID;
+					var IntID = BadgeID+"_"+aMap.id;
 		            
-		            $('#'+FieldID+'_AliasLanguageList').append(
+		            $('#'+aMap.id+'_AliasLanguageList').append(
 						
 
 						'<li class="list-inline-item" id="'+IntID+'_LI">'+
@@ -229,32 +282,14 @@ $("#create_domain").on("click",function(){
 
 		            );
         		});
+		}
 
 
+		}
+		
 
-	}
+		
 	});
-
-	//$(document).on("click",".std_field", function() {
-	//	$(this).addClass('active');//.siblings().removeClass('active');
-	//	var a = $(this).attr('class'); 
-	//	var b = $(this).attr('id'); 
-	//	var c = $(this).siblings().attr('class'); 
-	//	var d = $(this).siblings().attr('id'); 
-	//	console.log("Classes: "+a+" : "+b+" | "+c+" : "+d);
-	//});
-
-	//$(document).on("click",".number_type", function() {
-	//	$(this).addClass('active');//.siblings().removeClass('active');
-	//	$(this).siblings().removeClass('active');
-	//	var a = $(this).attr('class'); 
-	//	var b = $(this).attr('id'); 
-	//	var c = $(this).siblings().attr('class'); 
-	//	var d = $(this).siblings().attr('id'); 
-
-		//console.log("Classes: "+a+" : "+b+" | "+c+" : "+d);
-	
-	//});
 
 });
 
