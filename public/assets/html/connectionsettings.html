@@ -48,48 +48,6 @@
 
 <script>
 
-setSocketListeners();
-
-$(this).ready(function(){
-
-	//$('.dropdown-toggle').dropdown();
-
-	$('#savebutton').on('click', function() {
-		console.log("save button was clicked");
-	    //TO DO - Save info to backend JSON file
-	    
-	});
-
-	$('#testid li').on('click', function() {
-	    $('#dropdown_title').html($(this).find('a').html());
-	});
-
-	$('#savebutton').on('click', function() {
-		//console.log("Dewbug:"+$('#iqbot_version').val());
-	    socket.emit('save_structure',
-	    	{
-  				"url": $('#iqboturl').val(),
-  				"major_version": $('#iqbot_version').val(),
-  				"login": $('#iqbotlogin').val(),
-  				"password": $('#iqbotpassword').val()
-			}
-		);
-	});
-
-	$('#testbutton').on('click', function() {
-		console.log("Sending event");
-		socket.emit('test_iqbot_connection',
-	    	{}
-		);
-	});
-
-
-	//socket.emit('get_structure',{});
-	console.log("Loaded!");
-
-
-	});
-
 function setSocketListeners(){
 
 	// On receiving the content of the JSON file, we update all labels
@@ -135,6 +93,49 @@ function setSocketListeners(){
 	});
 
 };
+
+
+$(this).ready(function(){
+	setSocketListeners();
+	//$('.dropdown-toggle').dropdown();
+
+	$('#savebutton').on('click', function() {
+		console.log("save button was clicked");
+	    //TO DO - Save info to backend JSON file
+	    
+	});
+
+	$('#testid li').on('click', function() {
+	    $('#dropdown_title').html($(this).find('a').html());
+	});
+
+	$('#savebutton').on('click', function() {
+		//console.log("Dewbug:"+$('#iqbot_version').val());
+	    socket.emit('save_structure',
+	    	{
+  				"url": $('#iqboturl').val(),
+  				"major_version": $('#iqbot_version').val(),
+  				"login": $('#iqbotlogin').val(),
+  				"password": $('#iqbotpassword').val()
+			}
+		);
+	});
+
+	$('#testbutton').on('click', function() {
+		console.log("Sending event");
+		socket.emit('test_iqbot_connection',
+	    	{}
+		);
+	});
+
+
+	//socket.emit('get_structure',{});
+	console.log("Loaded!");
+
+
+	});
+
+
 
 </script>
 

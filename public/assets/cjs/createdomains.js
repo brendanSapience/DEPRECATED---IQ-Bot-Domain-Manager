@@ -1,7 +1,12 @@
 
+setSocketListeners();
 
+function setSocketListeners(){
+};
 
 $(document).ready(function(){
+
+setSocketListeners();
 
 function download(filename, text) {
     var element = document.createElement('a');
@@ -169,7 +174,7 @@ $("#create_domain").on("click",function(){
 	});
 	
 	var text = JSON.stringify(dom);
-    var filename = "domain.json";
+    var filename = "IQ Bot Domain - "+dom.name+".json";
     
     download(filename, text);
 	console.log(dom);
