@@ -48,7 +48,36 @@ function getNameFromId(dictionary, idToFind){
 
 $(document).ready(function(){
 
-var FieldDictionary = [];
+	var FieldDictionary = [];
+
+	// live check of Domain Name 
+    jQuery('#domain_name').bind('input propertychange', function() {
+
+        if (/^(?!\d)[A-Za-z0-9 _-]*$/.test(jQuery(this).val())) {
+            jQuery(this).css({
+                'background': '#FFFFFF'
+            });
+        } else {
+            jQuery(this).css({
+                'background': '#FFC2C2'
+            });
+        }
+    });
+
+    // Live check of Field Name
+    jQuery('#new_field_name').bind('input propertychange', function() {
+
+	    if (/^(?!\d)[A-Za-z0-9 _]*$/.test(jQuery(this).val())) {
+	        jQuery(this).css({
+	            'background': '#FFFFFF'
+	        });
+	    } else {
+	        jQuery(this).css({
+	            'background': '#FFC2C2'
+	        });
+	    }
+    });
+
 
 $("#create_domain").on("click",function(){
 	var dom = new Object();
