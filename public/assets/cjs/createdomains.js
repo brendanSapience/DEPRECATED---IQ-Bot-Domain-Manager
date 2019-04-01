@@ -1,3 +1,8 @@
+
+
+
+$(document).ready(function(){
+
 function download(filename, text) {
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -44,9 +49,6 @@ function getNameFromId(dictionary, idToFind){
 
 	return "";
 }
-
-
-$(document).ready(function(){
 
 	var FieldDictionary = [];
 
@@ -172,8 +174,6 @@ $("#create_domain").on("click",function(){
     download(filename, text);
 	console.log(dom);
 	}
-
-
 });
 
 	// removing Language Badges
