@@ -1,8 +1,21 @@
 var http  = require('http');
+var https = require('https');
 var fs    = require('fs');
 var path  = require('path');
 var mime  = require('mime');
 var cache = {};
+
+
+var key = fs.readFileSync('encryption/privkey.pem');
+var cert = fs.readFileSync( 'encryption/cert.pem' );
+var ca = fs.readFileSync( 'encryption/chain.pem' );
+
+var options = {
+  key: key,
+  cert: cert,
+  ca: ca
+};
+
 // send a standard error if requested static file does not exist
 function send404(response) {
   response.writeHead(404, {'Content-Type': 'text/plain'});
@@ -52,10 +65,22 @@ var server = http.createServer(function(request, response) {
   serveStatic(response, cache, absPath);
 });
 
-server.listen(parseInt(process.env.UIAPPPORT), function() {
+var serverS = https.createServer(options,function(request, response) {
+  var filePath = false;
+  if (request.url == '/') {
+    filePath = 'public/index.html';
+  } else {
+    filePath = 'public' + request.url;
+  }
+  var absPath = './' + filePath;
+  serveStatic(response, cache, absPath);
+});
+
+serverS.listen(parseInt(process.env.UIAPPPORT), function() {
   console.log("Server listening on port "+process.env.UIAPPPORT);
 });
 
+
 var myServer = require('./lib/server');
 // constructor of chatServer
-myServer.listen(server);
+myServer.listen(serverS);
