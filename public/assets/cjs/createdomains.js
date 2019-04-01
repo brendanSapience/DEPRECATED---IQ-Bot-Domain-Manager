@@ -56,7 +56,7 @@ $("#create_domain").on("click",function(){
 	dom.languages = [];
 	dom.fields = [];
 
-	if(!/^(?!\d)[A-Za-z0-9 _]*$/.test($('#domain_name').val())){
+	if(!/^(?!\d)[A-Za-z0-9 _-]*$/.test($('#domain_name').val())){
 		console.log("Error in Domain Name!");
 
 	}else{
