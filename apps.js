@@ -34,6 +34,7 @@ function sendFile(response, filePath, fileContents) {
 
 // check if a file is in the cache before asking fs.. (more time consuming)
 function serveStatic(response, cache, absPath) {
+  //console.log("Serving File: "+absPath);
   if (cache[absPath]) {
     sendFile(response, absPath, cache[absPath]);
   } else {
@@ -41,6 +42,7 @@ function serveStatic(response, cache, absPath) {
       if (exists) {
         fs.readFile(absPath, function(err, data) {
           if (err) {
+            console.log("cant find file: "+absPath+" | Error:"+err);
             send404(response);
           } else {
             cache[absPath] = data;
@@ -57,7 +59,7 @@ function serveStatic(response, cache, absPath) {
 var server = http.createServer(function(request, response) {
   var filePath = false;
   if (request.url == '/') {
-    filePath = 'public/index.html';
+    filePath = 'index.html';
   } else {
     filePath = 'public' + request.url;
   }
@@ -67,12 +69,14 @@ var server = http.createServer(function(request, response) {
 
 var serverS = https.createServer(options,function(request, response) {
   var filePath = false;
+  console.log("URL is:"+request.url);
   if (request.url == '/') {
-    filePath = 'public/index.html';
+    filePath = 'index.html';
   } else {
     filePath = 'public' + request.url;
   }
   var absPath = './' + filePath;
+  //console.log("DEBUG FIle:"+absPath);
   serveStatic(response, cache, absPath);
 });
 
