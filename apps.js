@@ -69,7 +69,7 @@ var server = http.createServer(function(request, response) {
 
 var serverS = https.createServer(options,function(request, response) {
   var filePath = false;
-  console.log("URL is:"+request.url);
+  //console.log("URL is:"+request.url);
   if (request.url == '/') {
     filePath = 'index.html';
   } else {
