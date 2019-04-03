@@ -208,7 +208,7 @@ $("#create_domain").on("click",function(){
 						'<li class="list-inline-item" id="'+IntID+'_LI">'+
 							'<div class="input-group">'+
 								'<h6><label class="label_left" lang="'+BadgeID+'" for="usr">'+BadgeID+': </label></h6>'+
-								'<input type="text" class="test input all_aliases" id="'+IntID+'" value="">'+
+								'<input type="text" class="test input all_aliases" id="'+IntID+'" value="" placeholder="Invoice #|Invoice Number|Invoice N:">'+
 							'</div>'+
 						'</li>'
 				);
@@ -230,6 +230,9 @@ $("#create_domain").on("click",function(){
 	// adding a data point
 	$("#add_field").on("click", function() {
 		var aMap = new Object();
+
+		$('#divfields').show();
+		$('#divalias').show();
 
 		// cant start with a number and can only have letters, numbers and spaces
 		if(!/^(?!\d)[A-Za-z0-9 _]*$/.test($('#new_field_name').val())){
@@ -309,8 +312,8 @@ $("#create_domain").on("click",function(){
 						'<li class="list-inline-item" id="'+IntID+'_LI">'+
 							'<div class="input-group">'+
 								'<h6><label class="label_left lang_aliases" lang="'+BadgeID+'" for="usr">'+BadgeID+': </label></h6>'+
-								  		
-								'<input type="text" class="test input all_aliases" id="'+IntID+'" value="">'+
+								 //'<input type="text" class="input-xxlarge form-control all_aliases" id="'+IntID+'" >'+ 		
+								'<input type="text" class="test input all_aliases" id="'+IntID+'" value="" placeholder="Invoice #|Invoice Number|Invoice N:">'+
 							'</div>'+
 						'</li>'
 
