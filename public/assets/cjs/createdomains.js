@@ -231,14 +231,17 @@ $("#create_domain").on("click",function(){
 	$("#add_field").on("click", function() {
 		var aMap = new Object();
 
-		$('#divfields').show();
-		$('#divalias').show();
+
 
 		// cant start with a number and can only have letters, numbers and spaces
-		if(!/^(?!\d)[A-Za-z0-9 _]*$/.test($('#new_field_name').val())){
+		if(!/^(?!\d)[A-Za-z0-9 _]*$/.test($('#new_field_name').val()) || $('#new_field_name').val() == ""){
 			console.log("Error in Field Name!!");
 			// should add a popup to notify of error
 		}else{
+
+			$('#divfields').show();
+			$('#divalias').show();
+
 			aMap.name = $('#new_field_name').val();
 			aMap.id = (new Date).getTime();;
 

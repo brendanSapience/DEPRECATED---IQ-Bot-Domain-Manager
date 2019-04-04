@@ -56,6 +56,8 @@ function serveStatic(response, cache, absPath) {
   }
 }
 
+// MAIN //
+
 var server = http.createServer(function(request, response) {
   var filePath = false;
   if (request.url == '/') {
@@ -76,15 +78,45 @@ var serverS = https.createServer(options,function(request, response) {
     filePath = 'public' + request.url;
   }
   var absPath = './' + filePath;
-  //console.log("DEBUG FIle:"+absPath);
   serveStatic(response, cache, absPath);
 });
 
-serverS.listen(parseInt(process.env.UIAPPPORT), function() {
-  console.log("Server listening on port "+process.env.UIAPPPORT);
+
+var JSONCONFIGFILE = './server_config.json'
+
+fs.readFile(JSONCONFIGFILE,(err,data) => {
+        if (err) {
+          console.log("CRITICAL ERROR: Could not find Server Config File: "+err);
+        }
+
+        else{
+
+          CONFIG = JSON.parse(data);
+          //console.log("Debug:"+CONFIG['port']);
+          if(CONFIG['http_or_https'] == "https"){
+            serverS.listen(parseInt(CONFIG['port']), function() {
+              console.log("Server listening on port "+CONFIG['port'] + " ("+CONFIG['http_or_https']+")");
+            });
+
+
+            var myServer = require('./lib/server');
+            myServer.listen(serverS);
+
+          }else if(CONFIG['http_or_https'] == "http"){
+            server.listen(parseInt(CONFIG['port']), function() {
+              console.log("Server listening on port "+CONFIG['port'] + " ("+CONFIG['http_or_https']+")");
+            });
+
+
+            var myServer = require('./lib/server');
+            myServer.listen(server);
+          }else{
+            console.log("CRITICAL ERROR: Could not determine http_or_https configuration.")
+          }
+
+
+        }
 });
 
 
-var myServer = require('./lib/server');
-// constructor of chatServer
-myServer.listen(serverS);
+

@@ -1,17 +1,26 @@
-<h3 class="sub-header">IQ Bot Connection Settings</h3> 
+<!-- <h3 class="sub-header">IQ Bot Connection Settings</h3> -->
 
 
 <form>
 	
 	  	<div class="form-group form-inline">
-  		<h5><label for="usr">IQ Bot Login: </label></h5>
+  		<h5><label for="usr">Login: </label></h5>
   		<input type="text" class="input-lg form-control" id="iqbotlogin">
+
+  		<h5><label for="usr">Password:</label></h5>
+  		<input type="password" class="form-control" id="iqbotpassword">
+
+
 		</div>
 
-	  	<div class="form-group form-inline">
-  		<h5><label for="usr">IQ Bot Password:</label></h5>
-  		<input type="password" class="form-control" id="iqbotpassword">
+		<div class="form-group form-inline">
+  			<h5><label for="pwd">Version:</label></h5>
+									<select class="form-control" id="iqbot_version">
+									<option>6</option>
+									</select>
+
 		</div>
+
 
 		<div class="form-group form-inline">
   			<h5><label for="pwd">URL (with Port):</label></h5>
@@ -22,13 +31,7 @@
 
 
 
-		<div class="form-group form-inline">
-  			<h5><label for="pwd">IQ Bot Version:</label></h5>
-									<select class="form-control" id="iqbot_version">
-									<option>6</option>
-									<option>5</option>
-									</select>
-		</div>
+
 
 		<div class="form-group">
 			<label for="pwd"> </label>
@@ -63,13 +66,14 @@ function setSocketListeners(){
 
 	socket.on('auth_response',function(result){
 
-		console.log(result);
+		$('#testbutton').prop("disabled",false);
+		//console.log(result);
 
 		//var IsOK = JSON.parse(result);
 		var IsOK = JSON.parse(result);
 
 		if(IsOK['success']){
-			console.log("OK!");
+			//console.log("OK!");
 			//$('#connOK').show()
 			$('#status').removeClass('badge-secondary');
 			$('#status').removeClass('badge-warning');
@@ -78,7 +82,7 @@ function setSocketListeners(){
 			$('#status').addClass('badge-success');
 
 		}else{
-			console.log("error!");
+			//console.log("error!");
 			$('#status').removeClass('badge-secondary');
 			//$('#status').removeClass('badge-danger');
 			$('#status').removeClass('badge-success');
@@ -123,6 +127,8 @@ $(this).ready(function(){
 
 	$('#testbutton').on('click', function() {
 		console.log("Sending event");
+		$(this).prop("disabled",true);
+		
 		socket.emit('test_iqbot_connection',
 	    	{}
 		);
@@ -130,7 +136,7 @@ $(this).ready(function(){
 
 
 	//socket.emit('get_structure',{});
-	console.log("Loaded!");
+	//console.log("Loaded!");
 
 
 	});
