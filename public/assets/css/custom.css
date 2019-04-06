@@ -21,7 +21,14 @@ input, label {
 }
 
 .test {
-    width:800px;
-    padding-top:2px;
+    
+    padding-top:0px;
+    width: 800px;
 
+}
+
+#li_spec {
+  display: table-cell;
+  width: auto;
+  text-align: center;
 }

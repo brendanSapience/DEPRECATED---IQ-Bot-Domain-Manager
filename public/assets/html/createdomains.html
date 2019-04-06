@@ -4,7 +4,7 @@
 
   <div class="col-sm-12">
 
-  <form class="form-horizontal">
+  <form class="form-vertical">
 
   	<div class="form-group form-inline">
   		<h5><label for="usr">Domain Name: </label></h5>
@@ -50,9 +50,6 @@
 
 	</div>
 
-
-
-
 	<div class="form-group form-inline">
   		<h5><label for="usr">Field: </label></h5>
 		<input type="text" class="input-lg form-control" id="new_field_name" data-toggle="tooltip" title="Allowed characters: Letters, Numbers and Spaces (cannot start with Numbers)" placeholder="Invoice Number">
@@ -68,35 +65,41 @@
 		</h5>
 	</div>
 
-	<div class="form-group form-inline" id="divfields" style="display: none">
-		
-						<table class="table" id="field_list_table">
-						  <thead>
-						    <tr>
-						      <th scope="col">Action</th>
-						      <th scope="col">Field Name</th>
-						      <th scope="col">Field Type</th>
-						      <th scope="col">Data Type</th>
-						      <th scope="col">Default</th>
-						    </tr>
-						  </thead>
-						  <tbody>
-						  </tbody>
-						</table>
-	</div>
+</form>
 
+	<div id="divfields_root text-center" class="form-group">
+		
+		<div class="form-group form-inline" id="divfields" style="display: none">
+			<div class="col-md-12">
+			<h4 class="text-center"> Fields </h4>
+							<table class="table-sm table " id="field_list_table">
+							  <thead>
+							    <tr class="d-flex">
+							      <th scope="col" class="col-1">Action</th>
+							      <th scope="col" class="col-3">Field Name</th>
+							      <th scope="col" class="col-2">Field Type</th>
+							      <th scope="col" class="col-2">Data Type</th>
+							      <th scope="col" class="col-4">Default</th>
+							    </tr>
+							  </thead>
+							  <tbody>
+							  </tbody>
+							</table>
+		</div>
+	</div>
+	</div>
 
 	
 	<div class="form-group form-inline" id="divalias" style="display: none">
 		
     		<div class="col-md-12">
-
+		<h4 class="text-center"> Aliases </h4>
 		<table class="table" id="field_alias_table">
 			<thead>
-			<tr>
-				<th scope="col">Field Name</th>
+			<tr class="d-flex">
+				<th scope="col" class="col-3">Field Name</th>
 
-				<th scope="col" data-toggle="tooltip" title="Aliases should be separated by '|'">Aliases</th>
+				<th scope="col"  class="col-9" data-toggle="tooltip" title="Aliases should be separated by '|'">Aliases</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -111,9 +114,6 @@
 
 </div>
 
-
-
-</form>
 </div>
 
 

@@ -85,7 +85,7 @@ function getNameFromId(dictionary, idToFind){
 	    }
     });
 
-
+// When click Export Domain
 $("#create_domain").on("click",function(){
 	var dom = new Object();
 	dom.name = "";
@@ -205,10 +205,16 @@ $("#create_domain").on("click",function(){
 				var IntID = BadgeID+"_"+FieldID;
 
 				$(this).find('ul').append(
-						'<li class="list-inline-item" id="'+IntID+'_LI">'+
-							'<div class="input-group">'+
-								'<h6><label class="label_left" lang="'+BadgeID+'" for="usr">'+BadgeID+': </label></h6>'+
-								'<input type="text" class="test input all_aliases" id="'+IntID+'" value="" placeholder="Invoice #|Invoice Number|Invoice N:">'+
+					'<li class="li_spec" id="'+IntID+'_LI">'+
+							'<div class="form-inline form-group row">'+
+							'<div class="col-sm-2">'+
+								'<h5><label class="label_left lang_aliases" lang="'+BadgeID+'" for="usr">'+BadgeID+': </label></h5>'+
+								'</div>'+
+								 //'<input type="text" class="input-xxlarge form-control all_aliases" id="'+IntID+'" >'+ 		
+								 //'<div class="col-xs-12">'+
+								 '<div class="col-sm-10">'+
+								'<input style="display:table-cell; width:100%" type="text" class="input-sm form-control all_aliases" id="'+IntID+'" value="" placeholder="Invoice #|Invoice Number|Invoice N:">'+
+								'</div>'+
 							'</div>'+
 						'</li>'
 				);
@@ -257,18 +263,18 @@ $("#create_domain").on("click",function(){
 
 			FieldDictionary.push(aMap);
 			$('#field_list_table tbody').append(
-				'<tr id="'+aMap.id+'">'+
-					'<td><button id="remove_field" type="button" class="btn btn-danger btn-sm delete_field">Delete</button></td>'+
-					'<td scope="row" class="field_name"><h5>'+aMap.name+'</h5></td>'+
-					'<td class="field_type">'+
-						'<select class="form-control" id="dropdownMenuButton0">'+
+				'<tr id="'+aMap.id+'" class="d-flex">'+
+					'<td class="col-1"><button id="remove_field" type="button" class="btn-sm btn btn-danger delete_field">Delete</button></td>'+
+					'<td scope="row" class="col-3 field_name"><h6>'+aMap.name+'</h6></td>'+
+					'<td class="col-2 field_type">'+
+						'<select class="form-control-sm" id="dropdownMenuButton0">'+
 							'<option>Standard</option>'+
 							'<option>Table</option>'+
 						'</select>'+
 					'</td>'+
 
-					'<td class="field_data_type">'+
-						'<select class="form-control" id="dropdownMenuButton0">'+
+					'<td class="col-2 field_data_type">'+
+						'<select class="form-control-sm" id="dropdownMenuButton0">'+
 						'<option>Text</option>'+
 						'<option>Date</option>'+
 						'<option>Number</option>'+
@@ -277,7 +283,7 @@ $("#create_domain").on("click",function(){
 						//'</div>'+
 					'</td>'+
 
-					'<td class="is_default">'+
+					'<td class="col-4 is_default">'+
 						'<div>'+
 							'<input class="form-check-input is_default_chkbox" type="checkbox" value="" id="defaultCheck1" checked>'+					
 						'</div>'+
@@ -289,9 +295,9 @@ $("#create_domain").on("click",function(){
 			$('#field_alias_table tbody').append(
 
 
-				'<tr id="'+aMap.id+'_AliasTable'+'">'+
-				'<td scope="row" ><h5>'+aMap.name+'</h5></td>'+
-				'<td scope="row" class="AliasInfo">'+
+				'<tr class="d-flex" id="'+aMap.id+'_AliasTable'+'">'+
+				'<td class="col-3" scope="row" ><h5>'+aMap.name+'</h5></td>'+
+				'<td class="col-9" scope="row" class="AliasInfo">'+
 						
 					'<ul id="'+aMap.id+'_AliasLanguageList" class="list-inline cust_aliasfield">'+
 
@@ -312,11 +318,16 @@ $("#create_domain").on("click",function(){
 		            $('#'+aMap.id+'_AliasLanguageList').append(
 						
 
-						'<li class="list-inline-item" id="'+IntID+'_LI">'+
-							'<div class="input-group">'+
-								'<h6><label class="label_left lang_aliases" lang="'+BadgeID+'" for="usr">'+BadgeID+': </label></h6>'+
+						'<li class="li_spec" id="'+IntID+'_LI">'+
+							'<div class="form-inline form-group row">'+
+							'<div class="col-sm-2">'+
+								'<h5><label class="label_left lang_aliases" lang="'+BadgeID+'" for="usr">'+BadgeID+': </label></h5>'+
+								'</div>'+
 								 //'<input type="text" class="input-xxlarge form-control all_aliases" id="'+IntID+'" >'+ 		
-								'<input type="text" class="test input all_aliases" id="'+IntID+'" value="" placeholder="Invoice #|Invoice Number|Invoice N:">'+
+								 //'<div class="col-xs-12">'+
+								 '<div class="col-sm-10">'+
+								'<input style="display:table-cell; width:100%" type="text" class="input-sm form-control all_aliases" id="'+IntID+'" value="" placeholder="Invoice #|Invoice Number|Invoice N:">'+
+								'</div>'+
 							'</div>'+
 						'</li>'
 
