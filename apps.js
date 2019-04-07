@@ -5,16 +5,11 @@ var path  = require('path');
 var mime  = require('mime');
 var cache = {};
 
-
-var key = fs.readFileSync('encryption/privkey.pem');
-var cert = fs.readFileSync( 'encryption/cert.pem' );
-var ca = fs.readFileSync( 'encryption/chain.pem' );
-
 var options = {
-  key: key,
-  cert: cert,
-  ca: ca
-};
+
+            };
+
+
 
 // send a standard error if requested static file does not exist
 function send404(response) {
@@ -58,29 +53,6 @@ function serveStatic(response, cache, absPath) {
 
 // MAIN //
 
-var server = http.createServer(function(request, response) {
-  var filePath = false;
-  if (request.url == '/') {
-    filePath = 'index.html';
-  } else {
-    filePath = 'public' + request.url;
-  }
-  var absPath = './' + filePath;
-  serveStatic(response, cache, absPath);
-});
-
-var serverS = https.createServer(options,function(request, response) {
-  var filePath = false;
-  //console.log("URL is:"+request.url);
-  if (request.url == '/') {
-    filePath = 'index.html';
-  } else {
-    filePath = 'public' + request.url;
-  }
-  var absPath = './' + filePath;
-  serveStatic(response, cache, absPath);
-});
-
 
 var JSONCONFIGFILE = './server_config.json'
 
@@ -94,6 +66,29 @@ fs.readFile(JSONCONFIGFILE,(err,data) => {
           CONFIG = JSON.parse(data);
           //console.log("Debug:"+CONFIG['port']);
           if(CONFIG['http_or_https'] == "https"){
+
+            var key = fs.readFileSync('encryption/privkey.pem');
+            var cert = fs.readFileSync( 'encryption/cert.pem' );
+            var ca = fs.readFileSync( 'encryption/chain.pem' );
+
+            var options = {
+              key: key,
+              cert: cert,
+              ca: ca
+            };
+
+            var serverS = https.createServer(options,function(request, response) {
+              var filePath = false;
+              //console.log("URL is:"+request.url);
+              if (request.url == '/') {
+                filePath = 'index.html';
+              } else {
+                filePath = 'public' + request.url;
+              }
+              var absPath = './' + filePath;
+              serveStatic(response, cache, absPath);
+            });
+
             serverS.listen(parseInt(CONFIG['port']), function() {
               console.log("Server listening on port "+CONFIG['port'] + " ("+CONFIG['http_or_https']+")");
             });
@@ -103,6 +98,19 @@ fs.readFile(JSONCONFIGFILE,(err,data) => {
             myServer.listen(serverS);
 
           }else if(CONFIG['http_or_https'] == "http"){
+
+            var server = http.createServer(function(request, response) {
+              var filePath = false;
+              if (request.url == '/') {
+                filePath = 'index.html';
+              } else {
+                filePath = 'public' + request.url;
+              }
+              var absPath = './' + filePath;
+              serveStatic(response, cache, absPath);
+            });
+
+
             server.listen(parseInt(CONFIG['port']), function() {
               console.log("Server listening on port "+CONFIG['port'] + " ("+CONFIG['http_or_https']+")");
             });
