@@ -2,6 +2,32 @@
 setSocketListeners();
 
 function setSocketListeners(){
+//domain_create_response
+	socket.on('domain_create_response',function(result){
+		$("#import_domain").prop("disabled",false);
+		//console.log(result);
+		var MyRes = JSON.parse(result);
+
+		var isSuccess = MyRes['success'];
+		var errors = MyRes['errors'];
+		if(isSuccess){
+			$("#import_domain_status").text("Domain Imported Successfully!");
+		}else{
+
+			$("#import_domain_status").text("Error: "+errors);
+		}
+	});
+
+	socket.on('demo_mode',function(DemoMode){
+		
+		if(DemoMode){
+			$("#import_domain").prop("disabled",false);
+		}else{
+			$("#import_domain").prop("disabled",true);
+		}
+
+	});
+
 };
 
 $(document).ready(function(){
@@ -55,47 +81,13 @@ function getNameFromId(dictionary, idToFind){
 	return "";
 }
 
-	var FieldDictionary = [];
-
-	// live check of Domain Name 
-    jQuery('#domain_name').bind('input propertychange', function() {
-
-        if (/^(?!\d)[A-Za-z0-9 _-]*$/.test(jQuery(this).val())) {
-            jQuery(this).css({
-                'background': '#FFFFFF'
-            });
-        } else {
-            jQuery(this).css({
-                'background': '#FFC2C2'
-            });
-        }
-    });
-
-    // Live check of Field Name
-    jQuery('#new_field_name').bind('input propertychange', function() {
-
-	    if (/^(?!\d)[A-Za-z0-9 _]*$/.test(jQuery(this).val())) {
-	        jQuery(this).css({
-	            'background': '#FFFFFF'
-	        });
-	    } else {
-	        jQuery(this).css({
-	            'background': '#FFC2C2'
-	        });
-	    }
-    });
-
-// When click Export Domain
-$("#create_domain").on("click",function(){
+function getJsonStructure(){
 	var dom = new Object();
 	dom.name = "";
 	dom.languages = [];
 	dom.fields = [];
 
-	if(!/^(?!\d)[A-Za-z0-9 _-]*$/.test($('#domain_name').val())){
-		console.log("Error in Domain Name!");
 
-	}else{
 
 	// Populate Domain Name
 	dom.name = $('#domain_name').val();
@@ -172,14 +164,75 @@ $("#create_domain").on("click",function(){
 
 
 	});
+	return dom;
+}
+
+
+
+	var FieldDictionary = [];
+
+	// live check of Domain Name 
+    jQuery('#domain_name').bind('input propertychange', function() {
+
+        if (/^(?!\d)[A-Za-z0-9 _-]*$/.test(jQuery(this).val())) {
+            jQuery(this).css({
+                'background': '#FFFFFF'
+            });
+        } else {
+            jQuery(this).css({
+                'background': '#FFC2C2'
+            });
+        }
+    });
+
+    // Live check of Field Name
+    jQuery('#new_field_name').bind('input propertychange', function() {
+
+	    if (/^(?!\d)[A-Za-z0-9 _]*$/.test(jQuery(this).val())) {
+	        jQuery(this).css({
+	            'background': '#FFFFFF'
+	        });
+	    } else {
+	        jQuery(this).css({
+	            'background': '#FFC2C2'
+	        });
+	    }
+    });
+
+// When click Export Domain
+$("#create_domain").on("click",function(){
+	var dom = new Object();
 	
-	var text = JSON.stringify(dom);
-    var filename = "IQ Bot Domain - "+dom.name+".json";
+	if(!/^(?!\d)[A-Za-z0-9 _-]*$/.test($('#domain_name').val())){
+		//console.log("Error in Domain Name!");
+
+	}else{
+		dom = getJsonStructure();
+
+	
+		var text = JSON.stringify(dom);
+    	var filename = "IQ Bot Domain - "+dom.name+".json";
     
-    download(filename, text);
-	console.log(dom);
+    	download(filename, text);
+		//console.log(dom);
 	}
 });
+
+// When click Export Domain
+$("#import_domain").on("click",function(){
+	var dom = new Object();
+	
+	dom = getJsonStructure();
+	//console.log("Importing Domain!");
+	 socket.emit('import_json_domain',
+	    	dom
+		);
+	$("#import_domain").prop("disabled",true);
+
+});
+
+
+
 
 	// removing Language Badges
 	$("#lang_badges h5 ul").on("click","li", function() {
@@ -237,11 +290,12 @@ $("#create_domain").on("click",function(){
 	$("#add_field").on("click", function() {
 		var aMap = new Object();
 
-
+		$("#action_buttons").show();
+		socket.emit('get_mode',{});
 
 		// cant start with a number and can only have letters, numbers and spaces
 		if(!/^(?!\d)[A-Za-z0-9 _]*$/.test($('#new_field_name').val()) || $('#new_field_name').val() == ""){
-			console.log("Error in Field Name!!");
+			//console.log("Error in Field Name!!");
 			// should add a popup to notify of error
 		}else{
 

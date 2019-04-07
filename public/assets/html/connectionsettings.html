@@ -41,7 +41,9 @@
 
 		<div class="form-group">
 		<h5>Status:  <span id="status" class="badge badge-secondary">Undetermined</span></h5>
-
+		<div>
+			<span id="conn_details"> </span>
+		</div>
 		</div>
 
   
@@ -70,9 +72,9 @@ function setSocketListeners(){
 		//console.log(result);
 
 		//var IsOK = JSON.parse(result);
-		var IsOK = JSON.parse(result);
+		var JSONRES = JSON.parse(result);
 
-		if(IsOK['success']){
+		if(JSONRES['success']){
 			//console.log("OK!");
 			//$('#connOK').show()
 			$('#status').removeClass('badge-secondary');
@@ -80,6 +82,7 @@ function setSocketListeners(){
 			//$('#status').removeClass('badge-success');
 			$('#status').text('Connection OK');
 			$('#status').addClass('badge-success');
+			$('#conn_details').text('');
 
 		}else{
 			//console.log("error!");
@@ -88,6 +91,10 @@ function setSocketListeners(){
 			$('#status').removeClass('badge-success');
 			$('#status').text('Connection Failed');
 			$('#status').addClass('badge-warning');
+
+			$('#conn_details').text(JSONRES['message']);
+			
+			//console.log(result);
 		}
 		//
 		
@@ -104,7 +111,7 @@ $(this).ready(function(){
 	//$('.dropdown-toggle').dropdown();
 
 	$('#savebutton').on('click', function() {
-		console.log("save button was clicked");
+		//console.log("save button was clicked");
 	    //TO DO - Save info to backend JSON file
 	    
 	});
@@ -126,7 +133,7 @@ $(this).ready(function(){
 	});
 
 	$('#testbutton').on('click', function() {
-		console.log("Sending event");
+		//console.log("Sending event");
 		$(this).prop("disabled",true);
 		
 		socket.emit('test_iqbot_connection',
