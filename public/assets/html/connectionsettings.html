@@ -69,11 +69,11 @@ function setSocketListeners(){
 	socket.on('auth_response',function(result){
 
 		$('#testbutton').prop("disabled",false);
-		//console.log(result);
+		
 
 		//var IsOK = JSON.parse(result);
 		var JSONRES = JSON.parse(result);
-
+//console.log(JSONRES);
 		if(JSONRES['success']){
 			//console.log("OK!");
 			//$('#connOK').show()
