@@ -2,7 +2,7 @@
 
 Domain Creator for Automation Anywhere IQ Bot
 
-_ Easily create a custom domain (document type) for IQ Bot. You can directly import your custom domains into IQ Bot or simply generate a domain JSON file_
+_Easily create a custom domain (document type) for IQ Bot. You can directly import your custom domains into IQ Bot or simply generate a domain JSON file_
 
 ## Compatibility
 
