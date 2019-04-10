@@ -13,33 +13,33 @@ $(document).ready(function(){
 	// When clicking the Save Fields button, save the labels as a JSON structure and override the existing one (by passing it to the server)
 	$('#CreateDomainButton').click( function(e) { 
 			$('#CreateDomainButton a').addClass('active');
-			//$('#EditDomainButton').removeClass('active');
+			$('#LoadDomainButton a').removeClass('active');
 			$('#ConnectionSettings a').removeClass('active');
 
 			$('.createdomains').show();
 			$('.connectionsettings').hide();
-			$('.editdomains').hide();
+			$('.loaddomains').hide();
 
 	});
 
-	$('#EditDomainButton').click( function(e) { 
-			$('#EditDomainButton a').addClass('active');
+	$('#LoadDomainButton').click( function(e) { 
+			$('#LoadDomainButton a').addClass('active');
 			$('#CreateDomainButton a').removeClass('active');
 			$('#ConnectionSettings a').removeClass('active');
 
 			$('.createdomains').hide();
 			$('.connectionsettings').hide();
-			$('.editdomains').show();
+			$('.loaddomains').show();
 	});
 
 	$('#ConnectionSettings a').click( function(e) { 
 			$('#ConnectionSettings a').addClass('active');
 			$('#CreateDomainButton a').removeClass('active');
+			$('#LoadDomainButton a').removeClass('active');
 	
 			$('.createdomains').hide();
 			$('.connectionsettings').show();
-			
-			$('.editdomains').hide();
+			$('.loaddomains').hide();
 
 
 	});

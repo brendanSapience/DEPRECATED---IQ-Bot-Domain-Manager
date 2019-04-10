@@ -1,6 +1,20 @@
 
 setSocketListeners();
 
+
+
+var FieldDictionary = [];
+
+
+
+
+// 
+// 
+// 	FUNCTIONS
+//
+//
+//
+
 function setSocketListeners(){
 //domain_create_response
 	socket.on('domain_create_response',function(result){
@@ -30,9 +44,157 @@ function setSocketListeners(){
 
 };
 
-$(document).ready(function(){
+function fillAliases(id, Language, Aliases){
+	//console.log("DEBUG: [" + id+"_AliasTable : "+Language+" : "+Aliases+"]");
+	//var foundUL = $('#'+id+"_AliasTable").find("ul").length;
 
-setSocketListeners();
+	var foundUL = $('#'+id+"_AliasTable").find("ul #"+Language+"_"+id).length;
+	$('#'+id+"_AliasTable").find("ul #"+Language+"_"+id).val(Aliases);
+	//console.log("DEBUG found ul?:" + foundUL);
+
+}
+
+function addAliases(aMap){
+			$('#field_alias_table tbody').append(
+
+
+				'<tr class="d-flex" id="'+aMap.id+'_AliasTable'+'">'+
+				'<td class="col-3" scope="row" ><h5>'+aMap.name+'</h5></td>'+
+				'<td class="col-9" scope="row" class="AliasInfo">'+
+						
+					'<ul id="'+aMap.id+'_AliasLanguageList" class="list-inline cust_aliasfield">'+
+
+
+					'</ul>'+ 
+
+				'</td>'+
+				'</tr>'
+			);
+
+			$('#lang_badges').find('li').each(function(){
+
+					var BadgeID = $(this).find('span').attr('id');
+
+		            //console.log("gaga?:"+BadgeID);
+					var IntID = BadgeID+"_"+aMap.id;
+		            
+		            $('#'+aMap.id+'_AliasLanguageList').append(
+						
+
+						'<li class="li_spec" id="'+IntID+'_LI">'+
+							'<div class="form-inline form-group row">'+
+							'<div class="col-sm-2">'+
+								'<h5><label class="label_left lang_aliases" lang="'+BadgeID+'" for="usr">'+BadgeID+': </label></h5>'+
+								'</div>'+
+								 //'<input type="text" class="input-xxlarge form-control all_aliases" id="'+IntID+'" >'+ 		
+								 //'<div class="col-xs-12">'+
+								 '<div class="col-sm-10">'+
+								'<input style="display:table-cell; width:100%" type="text" class="input-sm form-control all_aliases" id="'+IntID+'" value="" placeholder="Invoice #|Invoice Number|Invoice N:">'+
+								'</div>'+
+							'</div>'+
+						'</li>'
+
+		            );
+        	});
+
+}
+
+function addField(FieldName,FieldFormat, FieldType, FieldDefault){
+	var aMap = new Object();
+
+		$("#action_buttons").show();
+		socket.emit('get_mode',{});
+
+		// cant start with a number and can only have letters, numbers and spaces
+		//if(!/^(?!\d)[A-Za-z0-9 _]*$/.test($('#new_field_name').val()) || $('#new_field_name').val() == ""){
+		if(!/^(?!\d)[A-Za-z0-9 _]*$/.test(FieldName) || FieldName == ""){
+			//console.log("Error in Field Name!!");
+			// should add a popup to notify of error
+		}else{
+
+			$('#divfields').show();
+			$('#divalias').show();
+
+			//aMap.name = $('#new_field_name').val();
+			aMap.name = FieldName;
+			aMap.id = (new Date).getTime();;
+
+			Boolean = AlreadyExists = false;
+			FieldDictionary.forEach(function(entry) {
+
+    			if(entry.name == aMap.name){
+    				AlreadyExists = true;
+    			}
+			});
+
+		if(!AlreadyExists){
+
+
+			
+			FieldDictionary.push(aMap);
+			$('#field_list_table tbody').append(
+				'<tr id="'+aMap.id+'" class="d-flex">'+
+					'<td class="col-1"><button id="remove_field" type="button" class="btn-sm btn btn-danger delete_field">Delete</button></td>'+
+					'<td scope="row" class="col-3 field_name"><h6>'+aMap.name+'</h6></td>'+
+					'<td class="col-2 field_type">'+
+						'<select class="form-control-sm" id="dropdownMenuButton0">'+
+							'<option>Standard</option>'+
+							'<option>Table</option>'+
+						'</select>'+
+					'</td>'+
+
+					'<td class="col-2 field_data_type">'+
+						'<select class="form-control-sm" id="dropdownMenuButton0">'+
+						'<option>Text</option>'+
+						'<option>Date</option>'+
+						'<option>Number</option>'+
+						'</select>'+
+
+						//'</div>'+
+					'</td>'+
+
+					'<td class="col-4 is_default">'+
+						'<div>'+
+							'<input class="form-check-input is_default_chkbox" type="checkbox" value=""  checked="true">'+					
+						'</div>'+
+					'</td>'+
+				'</tr>'
+			);
+
+		//var fieldtype = $(this).find('td.field_type').find('select').val();
+		//var fielddatatype = $(this).find('td.field_data_type').find('select').val();
+
+			if(FieldFormat == "TABLE_COLUMN_FIELD"){
+				$('#'+aMap.id).find('td.field_type').find('select').val("Table");
+
+				//$(aMap.id).find('td.field_type').find('select').val(FieldFormat);
+			}else if(FieldFormat == "STANDARD_FIELD"){
+				$('#'+aMap.id).find('td.field_type').find('select').val("Standard");
+			}
+
+			if(FieldType != null){
+				$('#'+aMap.id).find('td.field_data_type').find('select').val(FieldType);
+			}
+
+			//console.log("Debug: ["+FieldDefault+"]");
+
+			if(FieldDefault != null){
+				if(FieldDefault){
+					$('#'+aMap.id).find('.is_default_chkbox').prop('checked', true);
+					
+				}else{
+					$('#'+aMap.id).find('.is_default_chkbox').prop('checked', false);
+				}
+				
+			}
+
+			addAliases(aMap);
+		}
+
+
+		}
+		return aMap.id;
+}
 
 function download(filename, text) {
     var element = document.createElement('a');
@@ -167,9 +329,117 @@ function getJsonStructure(){
 	return dom;
 }
 
+function addLanguage(newLanguage){
+
+			var BadgeID = newLanguage;
+    		$('#lang_badges h5 ul').append('<li class="list-inline-item" href="#"><span id="'+BadgeID+'" class="badge badge-success badge_lang">'+BadgeID+'</span></li>');
+		
+			// for each TR in the alias table (ie: for each data point)
+			$('#field_alias_table tbody').find('tr').each(function(){
+
+				var FieldID = $(this).attr('id');
+				var IdOfRow = $(this).find('ul').attr('id');
+				//console.log("DEBUG Row:"+IdOfRow);
+
+				var IntID = BadgeID+"_"+FieldID;
+
+				$(this).find('ul').append(
+					'<li class="li_spec" id="'+IntID+'_LI">'+
+							'<div class="form-inline form-group row">'+
+							'<div class="col-sm-2">'+
+								'<h5><label class="label_left lang_aliases" lang="'+BadgeID+'" for="usr">'+BadgeID+': </label></h5>'+
+								'</div>'+
+								 //'<input type="text" class="input-xxlarge form-control all_aliases" id="'+IntID+'" >'+ 		
+								 //'<div class="col-xs-12">'+
+								 '<div class="col-sm-10">'+
+								'<input style="display:table-cell; width:100%" type="text" class="input-sm form-control all_aliases" id="'+IntID+'" value="" placeholder="Invoice #|Invoice Number|Invoice N:">'+
+								'</div>'+
+							'</div>'+
+						'</li>'
+				);
+		});
+					
+		
+}
+
+$(document).ready(function(){
+
+setSocketListeners();
 
 
-	var FieldDictionary = [];
+
+
+$(".custom-file-input").on("change", function() {
+	var file = document.getElementById("DomainLoadFilePicker").files[0];
+		if (file) {
+		    var reader = new FileReader();
+		    reader.readAsText(file, "UTF-8");
+		    reader.onload = function (evt) {
+		    	//document.getElementById("DomainLoadFilePicker").text("sdfsdf");
+		    	var DomainInfo = JSON.parse(evt.target.result);
+
+		    	var dName = DomainInfo['name'];
+		    	var dLanguages = DomainInfo['languages'];
+		    	var dFields = DomainInfo['fields'];
+
+		    	//"|"+console.log(dFields);
+
+				$('#domain_name').val(DomainInfo['name']);
+
+		    	for(var lang in dLanguages){
+		    		//console.log("Language: "+dLanguages[lang]);
+					addLanguage(dLanguages[lang]);
+		    	}
+		    	
+		    	for (var field in dFields){
+
+		    		FieldInfo = dFields[field];
+		    		//console.log("DEBUGSDSAD:"+FieldInfo['name']);
+
+		    		var fname = FieldInfo['name'];
+		    		var ftype = FieldInfo['type'];
+		    		var fformat = FieldInfo['format'];
+		    		var fdefault = FieldInfo['default'];
+
+		    		var faliases = FieldInfo['aliases'];
+
+
+		    		//console.log("DEBUg:"+fname+":"+ftype+":"+fformat+":"+fdefault);
+		    		var FiledID = addField(fname,ftype,fformat,fdefault);
+
+		    		
+
+		    		for (var i in faliases){
+		    			LangAlias = faliases[i];
+
+		    			var AllAliases = "";
+
+		    			aLang = LangAlias['language'];
+		    			aNames = LangAlias['names'];
+		    			for(var j in aNames){
+		    				AllAliases = AllAliases+"|"+aNames[j];
+		    			}
+
+		    			var AllAliases_Corrected = AllAliases.substring(1);
+		    			fillAliases(FiledID,aLang,AllAliases_Corrected);
+		    			//console.log("DEBUG for Alias: "+ aLang+" - ["+AllAliases+"]");
+
+		    		}
+
+
+		    	}
+
+		        //console.log(evt.target.result);
+		    }
+		    reader.onerror = function (evt) {
+		        console.log("Error reading file");
+		    }
+		    $('#CreateDomainButton').trigger('click');
+		}
+});
+
+	
+
 
 	// live check of Domain Name 
     jQuery('#domain_name').bind('input propertychange', function() {
@@ -245,33 +515,7 @@ $("#import_domain").on("click",function(){
 
 		if (!$('#'+$('#lang_selection').val()+'').length) {
 
-			var BadgeID = $('#lang_selection').val();
-    		$('#lang_badges h5 ul').append('<li class="list-inline-item" href="#"><span id="'+BadgeID+'" class="badge badge-success badge_lang">'+BadgeID+'</span></li>');
-		
-			// for each TR in the alias table (ie: for each data point)
-			$('#field_alias_table tbody').find('tr').each(function(){
-
-				var FieldID = $(this).attr('id');
-				var IdOfRow = $(this).find('ul').attr('id');
-				//console.log("DEBUG Row:"+IdOfRow);
-
-				var IntID = BadgeID+"_"+FieldID;
-
-				$(this).find('ul').append(
-					'<li class="li_spec" id="'+IntID+'_LI">'+
-							'<div class="form-inline form-group row">'+
-							'<div class="col-sm-2">'+
-								'<h5><label class="label_left lang_aliases" lang="'+BadgeID+'" for="usr">'+BadgeID+': </label></h5>'+
-								'</div>'+
-								 //'<input type="text" class="input-xxlarge form-control all_aliases" id="'+IntID+'" >'+ 		
-								 //'<div class="col-xs-12">'+
-								 '<div class="col-sm-10">'+
-								'<input style="display:table-cell; width:100%" type="text" class="input-sm form-control all_aliases" id="'+IntID+'" value="" placeholder="Invoice #|Invoice Number|Invoice N:">'+
-								'</div>'+
-							'</div>'+
-						'</li>'
-				);
-		});
+			addLanguage($('#lang_selection').val());
 					
 		}
 	});
@@ -282,116 +526,14 @@ $("#import_domain").on("click",function(){
 		$('#'+FieldID+'_AliasTable').remove();
 		$(this).closest('tr').remove();
 		var Pos = getPositionOfId(FieldDictionary,FieldID);
-		//console.log("Pos:"+Pos);
 		FieldDictionary.splice(Pos, 1);
 	});
 
 	// adding a data point
 	$("#add_field").on("click", function() {
-		var aMap = new Object();
-
-		$("#action_buttons").show();
-		socket.emit('get_mode',{});
-
-		// cant start with a number and can only have letters, numbers and spaces
-		if(!/^(?!\d)[A-Za-z0-9 _]*$/.test($('#new_field_name').val()) || $('#new_field_name').val() == ""){
-			//console.log("Error in Field Name!!");
-			// should add a popup to notify of error
-		}else{
-
-			$('#divfields').show();
-			$('#divalias').show();
-
-			aMap.name = $('#new_field_name').val();
-			aMap.id = (new Date).getTime();;
-
-			Boolean = AlreadyExists = false;
-			FieldDictionary.forEach(function(entry) {
-
-    			if(entry.name == aMap.name){
-    				AlreadyExists = true;
-    			}
-			});
-
-		if(!AlreadyExists){
-
-			FieldDictionary.push(aMap);
-			$('#field_list_table tbody').append(
-				'<tr id="'+aMap.id+'" class="d-flex">'+
-					'<td class="col-1"><button id="remove_field" type="button" class="btn-sm btn btn-danger delete_field">Delete</button></td>'+
-					'<td scope="row" class="col-3 field_name"><h6>'+aMap.name+'</h6></td>'+
-					'<td class="col-2 field_type">'+
-						'<select class="form-control-sm" id="dropdownMenuButton0">'+
-							'<option>Standard</option>'+
-							'<option>Table</option>'+
-						'</select>'+
-					'</td>'+
-
-					'<td class="col-2 field_data_type">'+
-						'<select class="form-control-sm" id="dropdownMenuButton0">'+
-						'<option>Text</option>'+
-						'<option>Date</option>'+
-						'<option>Number</option>'+
-						'</select>'+
-
-						//'</div>'+
-					'</td>'+
-
-					'<td class="col-4 is_default">'+
-						'<div>'+
-							'<input class="form-check-input is_default_chkbox" type="checkbox" value="" id="defaultCheck1" checked>'+					
-						'</div>'+
-					'</td>'+
-				'</tr>'
-			);
-
-
-			$('#field_alias_table tbody').append(
-
-
-				'<tr class="d-flex" id="'+aMap.id+'_AliasTable'+'">'+
-				'<td class="col-3" scope="row" ><h5>'+aMap.name+'</h5></td>'+
-				'<td class="col-9" scope="row" class="AliasInfo">'+
-						
-					'<ul id="'+aMap.id+'_AliasLanguageList" class="list-inline cust_aliasfield">'+
-
-
-					'</ul>'+ 
-
-				'</td>'+
-				'</tr>'
-				);
-
-				$('#lang_badges').find('li').each(function(){
-
-					var BadgeID = $(this).find('span').attr('id');
-
-		            //console.log("gaga?:"+BadgeID);
-					var IntID = BadgeID+"_"+aMap.id;
-		            
-		            $('#'+aMap.id+'_AliasLanguageList').append(
-						
-
-						'<li class="li_spec" id="'+IntID+'_LI">'+
-							'<div class="form-inline form-group row">'+
-							'<div class="col-sm-2">'+
-								'<h5><label class="label_left lang_aliases" lang="'+BadgeID+'" for="usr">'+BadgeID+': </label></h5>'+
-								'</div>'+
-								 //'<input type="text" class="input-xxlarge form-control all_aliases" id="'+IntID+'" >'+ 		
-								 //'<div class="col-xs-12">'+
-								 '<div class="col-sm-10">'+
-								'<input style="display:table-cell; width:100%" type="text" class="input-sm form-control all_aliases" id="'+IntID+'" value="" placeholder="Invoice #|Invoice Number|Invoice N:">'+
-								'</div>'+
-							'</div>'+
-						'</li>'
-
-		            );
-        		});
-		}
-
-
-		}
 		
+		addField($('#new_field_name').val(),null,null,null);
+		// TO DO
 
 		
 	});
