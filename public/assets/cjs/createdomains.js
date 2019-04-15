@@ -107,7 +107,9 @@ function addField(FieldName,FieldFormat, FieldType, FieldDefault){
 
 		// cant start with a number and can only have letters, numbers and spaces
 		//if(!/^(?!\d)[A-Za-z0-9 _]*$/.test($('#new_field_name').val()) || $('#new_field_name').val() == ""){
-		if(!/^(?!\d)[A-Za-z0-9 _]*$/.test(FieldName) || FieldName == ""){
+			
+		if(!/^(?!\d)[^,;!@#$%^&*()-]+$/.test(FieldName) || FieldName == ""){
+		//if(!/^(?!\d)[A-Za-z0-9 _]*$/.test(FieldName) || FieldName == ""){
 			//console.log("Error in Field Name!!");
 			// should add a popup to notify of error
 		}else{
@@ -129,8 +131,6 @@ function addField(FieldName,FieldFormat, FieldType, FieldDefault){
 
 		if(!AlreadyExists){
 
-
-			
 			FieldDictionary.push(aMap);
 			$('#field_list_table tbody').append(
 				'<tr id="'+aMap.id+'" class="d-flex">'+
@@ -458,7 +458,9 @@ $(".custom-file-input").on("change", function() {
     // Live check of Field Name
     jQuery('#new_field_name').bind('input propertychange', function() {
 
-	    if (/^(?!\d)[A-Za-z0-9 _]*$/.test(jQuery(this).val())) {
+    	//
+    	///^(?!\d)[A-Za-z0-9 _]*$/
+	    if (/^(?!\d)[^,;!@#$%^&*()-]+$/.test(jQuery(this).val())) {
 	        jQuery(this).css({
 	            'background': '#FFFFFF'
 	        });
