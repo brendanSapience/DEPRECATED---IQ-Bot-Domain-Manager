@@ -11,7 +11,8 @@ IQ Bot 6.5+
 ## Install (http)
 
 1. Clone this repository (git clone https://github.com/brendanSapience/IQ-Bot-Domain-Manager)
-2. Run the install.bat file (it will automatically install required node.js dependencies)
+2. Optional: Run the install.bat file (it will automatically install required node.js dependencies)
+(the node_modules folder should already contain all required dependencies)
 3. Create a folder called "encryption" in the repository
 4. Modify the server_config.json file and replace https with http in "http_or_https" option
 5. Run the start.bat file
@@ -20,7 +21,8 @@ IQ Bot 6.5+
 ## Install (https)
 
 1. Clone this repository (git clone https://github.com/brendanSapience/IQ-Bot-Domain-Manager)
-2. Run the install.bat file (it will automatically install required node.js dependencies)
+2. Optional: Run the install.bat file (it will automatically install required node.js dependencies)
+(the node_modules folder should already contain all required dependencies)
 3. Create a folder called "encryption" in the repository
 4. Dump your pem files in the encryption folder (cert.pem, chain.pem, privkey.pem)
 5. Run the start.bat file
