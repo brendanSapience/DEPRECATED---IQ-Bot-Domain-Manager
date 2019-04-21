@@ -1,24 +1,24 @@
 {
-  "name": "web-app-stub",
-  "version": "0.0.0",
-  "description": "simple stub for node.js webapps",
+  "name": "IQBot-domain-manager",
+  "version": "0.0.1",
+  "description": "Domain Manager for IQ Bot",
   "main": "apps.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/brendanyann/web-app-stub"
+    "url": "https://github.com/brendanSapience/IQ-Bot-Domain-Manager"
   },
   "keywords": [
-    "stub"
+    "IQBot,Domain Manager"
   ],
   "author": "Brendan SAPIENCE",
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^4.1.2",
+    "forever": "^1.0.0",
     "mime": "^2.4.0",
-    "mssql": "^4.1.0",
     "socket.io": "^2.2.0"
   }
 }
