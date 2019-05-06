@@ -35,7 +35,7 @@
 
 		<div class="form-group">
 			<label for="pwd"> </label>
-			<button id="savebutton" type="button" class="btn btn-info btn-xlarge">Save</button>
+			<!--<button id="savebutton" type="button" class="btn btn-info btn-xlarge">Save</button>-->
 			<button id="testbutton" type="button" class="btn btn-info btn-xlarge">Test</button>
 		</div>
 
@@ -83,7 +83,6 @@ function setSocketListeners(){
 			$('#status').text('Connection OK');
 			$('#status').addClass('badge-success');
 			$('#conn_details').text('');
-
 		}else{
 			//console.log("error!");
 			$('#status').removeClass('badge-secondary');
@@ -91,16 +90,8 @@ function setSocketListeners(){
 			$('#status').removeClass('badge-success');
 			$('#status').text('Connection Failed');
 			$('#status').addClass('badge-warning');
-
 			$('#conn_details').text(JSONRES['message']);
-			
-			//console.log(result);
 		}
-		//
-		
-
-		//$('#iqbotlogin').text(result["login"]);
-
 	});
 
 };
@@ -110,11 +101,6 @@ $(this).ready(function(){
 	setSocketListeners();
 	//$('.dropdown-toggle').dropdown();
 
-	$('#savebutton').on('click', function() {
-		//console.log("save button was clicked");
-	    //TO DO - Save info to backend JSON file
-	    
-	});
 
 	$('#testid li').on('click', function() {
 	    $('#dropdown_title').html($(this).find('a').html());
@@ -134,11 +120,17 @@ $(this).ready(function(){
 
 	$('#testbutton').on('click', function() {
 		//console.log("Sending event");
-		$(this).prop("disabled",true);
-		
-		socket.emit('test_iqbot_connection',
-	    	{}
+		socket.emit('save_and_test_iqbot_connection',
+	    	{
+  				"url": $('#iqboturl').val(),
+  				"major_version": $('#iqbot_version').val(),
+  				"login": $('#iqbotlogin').val(),
+  				"password": $('#iqbotpassword').val()
+			}
 		);
+
+		$(this).prop("disabled",true);
+
 	});
 
 
