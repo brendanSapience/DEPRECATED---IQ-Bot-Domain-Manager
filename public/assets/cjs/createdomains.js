@@ -15,6 +15,48 @@ var FieldDictionary = [];
 //
 //
 
+function checkDomain(){
+
+	var dom = new Object();
+	
+	if($('#domain_name').val() == ""){
+		return "Error: Domain Name cannot be Empty.";
+	}else{
+		if(!/^(?!\d)[A-Za-z0-9 _-]*$/.test($('#domain_name').val())){
+			return "Error: Domain Name has forbidden characters."
+
+		}else{
+			return "";
+		}
+	}
+
+}
+
+function checkAliases(){
+
+			var NonEmptyAliases = [];
+			var EmptyAliasFound = false;
+			$('#field_alias_table tbody').find('tr').each(function(){
+
+				
+				var myUL = $(this).find('ul');
+				myUL.find('li').each(function(){
+
+					var myaliases = $(this).find('input').val();
+					if(myaliases == ""){
+						EmptyAliasFound = true;
+						
+					}
+				})
+		});
+		if(!EmptyAliasFound){
+			return "";
+		}else{
+			return "Error: One or more Aliases are empty.";
+		}
+		
+}
+
 function setSocketListeners(){
 //domain_create_response
 	socket.on('domain_create_response',function(result){
@@ -446,9 +488,6 @@ $(".custom-file-input").on("change", function() {
 		}
 });
 
-	
-
-
 	// live check of Domain Name 
     jQuery('#domain_name').bind('input propertychange', function() {
 
@@ -481,38 +520,59 @@ $(".custom-file-input").on("change", function() {
 
 // When click Export Domain
 $("#create_domain").on("click",function(){
+	$("#import_domain_status").text("");
 	var dom = new Object();
-	
-	if(!/^(?!\d)[A-Za-z0-9 _-]*$/.test($('#domain_name').val())){
-		//console.log("Error in Domain Name!");
+
+	var CheckDomainNameMsg = checkDomain();
+	var CheckAliasesMsg = checkAliases();
+
+	if(CheckDomainNameMsg == ""){
+		if(CheckAliasesMsg == ""){
+			dom = getJsonStructure();
+
+			
+			var text = JSON.stringify(dom);
+		    var filename = "IQ Bot Domain - "+dom.name+".json";
+		    
+		    download(filename, text);
+
+		}else{
+			$("#import_domain_status").text(CheckAliasesMsg);
+		}
+
 
 	}else{
-		dom = getJsonStructure();
-
+		$("#import_domain_status").text(CheckDomainNameMsg);
 	
-		var text = JSON.stringify(dom);
-    	var filename = "IQ Bot Domain - "+dom.name+".json";
-    
-    	download(filename, text);
-		//console.log(dom);
+
 	}
+//
 });
 
 // When click Export Domain
 $("#import_domain").on("click",function(){
+	$("#import_domain_status").text("");
 	var dom = new Object();
 	
-	dom = getJsonStructure();
-	//console.log("Importing Domain!");
-	 socket.emit('import_json_domain',
-	    	dom
-		);
-	$("#import_domain").prop("disabled",true);
+	var CheckDomainNameMsg = checkDomain();
+	var CheckAliasesMsg = checkAliases();
+
+
+	if(CheckDomainNameMsg == ""){
+		if(CheckAliasesMsg == ""){
+			dom = getJsonStructure();
+		 	socket.emit('import_json_domain',dom);
+		 	$("#import_domain").prop("disabled",true);
+
+		}else{
+			$("#import_domain_status").text(CheckAliasesMsg);
+		}
+	}else{
+		$("#import_domain_status").text(CheckDomainNameMsg);
+	
+	}
 
 });
-
-
-
 
 	// removing Language Badges
 	$("#lang_badges h5 ul").on("click","li", function() {
