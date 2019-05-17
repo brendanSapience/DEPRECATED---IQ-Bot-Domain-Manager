@@ -64,6 +64,8 @@ function setSocketListeners(){
 		
 		select = document.getElementById('lang_selection');
 
+		select.options.length = 0;
+
 		var LangTable = Languages['languages'];
 		LangTable.forEach(function(element){
 			//console.log(element);
