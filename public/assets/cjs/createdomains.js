@@ -59,6 +59,23 @@ function checkAliases(){
 
 function setSocketListeners(){
 //domain_create_response
+
+	socket.on('languages_sent',function(Languages){
+		
+		select = document.getElementById('lang_selection');
+
+		var LangTable = Languages['languages'];
+		LangTable.forEach(function(element){
+			//console.log(element);
+			var opt = document.createElement('option');
+			opt.value = element;
+    		opt.innerHTML = element;
+    		select.appendChild(opt);
+
+		});
+
+	});
+
 	socket.on('domain_create_response',function(result){
 		$("#import_domain").prop("disabled",false);
 		//console.log(result);
@@ -416,7 +433,7 @@ $(document).ready(function(){
 
 setSocketListeners();
 
-
+socket.emit('get_languages');
 
 
 $(".custom-file-input").on("change", function() {
