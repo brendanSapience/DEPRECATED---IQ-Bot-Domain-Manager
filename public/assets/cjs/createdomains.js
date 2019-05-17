@@ -42,6 +42,13 @@ function setSocketListeners(){
 
 	});
 
+	socket.on('server_side_error',function(err){
+		
+		console.log("Error Returned from Server: "+err)
+
+	});
+
+
 };
 
 function fillAliases(id, Language, Aliases){
@@ -103,6 +110,7 @@ function addField(FieldName,FieldFormat, FieldType, FieldDefault){
 	var aMap = new Object();
 
 		$("#action_buttons").show();
+
 		socket.emit('get_mode',{});
 
 		// cant start with a number and can only have letters, numbers and spaces
@@ -508,7 +516,8 @@ $("#import_domain").on("click",function(){
 
 	// removing Language Badges
 	$("#lang_badges h5 ul").on("click","li", function() {
-		$(this).remove();
+
+		//$(this).remove();
 		// when language is removed, need to go through alias table and remove languages
 	});
 
