@@ -5,6 +5,13 @@ var path  = require('path');
 var mime  = require('mime');
 var cache = {};
 
+
+var PRIVKEYFILE = 'encryption/privkey.pem';
+var CERTFILE = 'encryption/cert.pem';
+var CERTCHAINFILE = 'encryption/chain.pem';
+
+var SERVERCONFIFLE = './server_config.json';
+
 var options = {
 
             };
@@ -51,10 +58,23 @@ function serveStatic(response, cache, absPath) {
   }
 }
 
+function createHttpServer(){
+              var server = http.createServer(function(request, response) {
+              var filePath = false;
+              if (request.url == '/') {
+                filePath = 'index.html';
+              } else {
+                filePath = 'public' + request.url;
+              }
+              var absPath = './' + filePath;
+              serveStatic(response, cache, absPath);
+            });
+            return server;
+}
 // MAIN //
 
 
-var JSONCONFIGFILE = './server_config.json'
+var JSONCONFIGFILE = SERVERCONFIFLE;
 
 fs.readFile(JSONCONFIGFILE,(err,data) => {
         if (err) {
@@ -65,54 +85,61 @@ fs.readFile(JSONCONFIGFILE,(err,data) => {
 
           CONFIG = JSON.parse(data);
           //console.log("Debug:"+CONFIG['port']);
+          var HttpsOrHttp = CONFIG['http_or_https'];
+
           if(CONFIG['http_or_https'] == "https"){
+            try{
+              var key = fs.readFileSync(PRIVKEYFILE);
+              var cert = fs.readFileSync(CERTFILE);
+              var ca = fs.readFileSync(CERTCHAINFILE);
 
-            var key = fs.readFileSync('encryption/privkey.pem');
-            var cert = fs.readFileSync( 'encryption/cert.pem' );
-            var ca = fs.readFileSync( 'encryption/chain.pem' );
+              var options = {
+                key: key,
+                cert: cert,
+                ca: ca
+              };
 
-            var options = {
-              key: key,
-              cert: cert,
-              ca: ca
-            };
+              var serverS = https.createServer(options,function(request, response) {
+                var filePath = false;
+                //console.log("URL is:"+request.url);
+                if (request.url == '/') {
+                  filePath = 'index.html';
+                } else {
+                  filePath = 'public' + request.url;
+                }
+                var absPath = './' + filePath;
+                serveStatic(response, cache, absPath);
+              });
 
-            var serverS = https.createServer(options,function(request, response) {
-              var filePath = false;
-              //console.log("URL is:"+request.url);
-              if (request.url == '/') {
-                filePath = 'index.html';
-              } else {
-                filePath = 'public' + request.url;
-              }
-              var absPath = './' + filePath;
-              serveStatic(response, cache, absPath);
-            });
-
-            serverS.listen(parseInt(CONFIG['port']), function() {
-              console.log("Server listening on port "+CONFIG['port'] + " ("+CONFIG['http_or_https']+")");
-            });
+              serverS.listen(parseInt(CONFIG['port']), function() {
+                console.log("Server listening on port "+CONFIG['port'] + " ("+HttpsOrHttp+")");
+              });
 
 
-            var myServer = require('./lib/server');
-            myServer.listen(serverS);
+              var myServer = require('./lib/server');
+              myServer.listen(serverS);
+
+
+            }catch (err){
+              console.log("Server Error: Cert files are missing. Reverting to HTTP.")
+              HttpsOrHttp = "http";
+              var server = createHttpServer();
+              server.listen(parseInt(CONFIG['port']), function() {
+                console.log("Server listening on port "+CONFIG['port'] + " ("+HttpsOrHttp+")");
+              });
+              var myServer = require('./lib/server');
+              myServer.listen(server);
+
+            }
+            
 
           }else if(CONFIG['http_or_https'] == "http"){
 
-            var server = http.createServer(function(request, response) {
-              var filePath = false;
-              if (request.url == '/') {
-                filePath = 'index.html';
-              } else {
-                filePath = 'public' + request.url;
-              }
-              var absPath = './' + filePath;
-              serveStatic(response, cache, absPath);
-            });
+            var server = createHttpServer();
 
 
             server.listen(parseInt(CONFIG['port']), function() {
-              console.log("Server listening on port "+CONFIG['port'] + " ("+CONFIG['http_or_https']+")");
+              console.log("Server listening on port "+CONFIG['port'] + " ("+HttpsOrHttp+")");
             });
 
 
