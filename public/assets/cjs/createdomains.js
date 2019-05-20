@@ -80,17 +80,26 @@ function setSocketListeners(){
 
 	socket.on('domain_create_response',function(result){
 		$("#import_domain").prop("disabled",false);
-		//console.log(result);
+		
 		var MyRes = JSON.parse(result);
 
-		var isSuccess = MyRes['success'];
-		var errors = MyRes['errors'];
-		if(isSuccess){
-			$("#import_domain_status").text("Domain Imported Successfully!");
+		var status = MyRes['status'];
+		var Message = MyRes['message'];
+		//console.log("Status:"+status);
+		if(status === 403){
+			//console.log("Status in there:"+Message);
+			$("#import_domain_status").text("Error: "+Message);
 		}else{
+			var isSuccess = MyRes['success'];
+			var errors = MyRes['errors'];
+			if(isSuccess){
+				$("#import_domain_status").text("Domain Imported Successfully!");
+			}else{
 
-			$("#import_domain_status").text("Error: "+errors);
+				$("#import_domain_status").text("Error: "+errors);
+			}
 		}
+
 	});
 
 	socket.on('demo_mode',function(DemoMode){
