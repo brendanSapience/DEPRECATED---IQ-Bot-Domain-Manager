@@ -15,6 +15,89 @@ var FieldDictionary = [];
 //
 //
 
+    function CSVToArray( strData, strDelimiter ){
+        // Check to see if the delimiter is defined. If not,
+        // then default to comma.
+        strDelimiter = (strDelimiter || ",");
+
+        // Create a regular expression to parse the CSV values.
+        var objPattern = new RegExp(
+            (
+                // Delimiters.
+                "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
+
+                // Quoted fields.
+                "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
+
+                // Standard fields.
+                "([^\"\\" + strDelimiter + "\\r\\n]*))"
+            ),
+            "gi"
+            );
+
+
+        // Create an array to hold our data. Give the array
+        // a default empty first row.
+        var arrData = [[]];
+
+        // Create an array to hold our individual pattern
+        // matching groups.
+        var arrMatches = null;
+
+
+        // Keep looping over the regular expression matches
+        // until we can no longer find a match.
+        while (arrMatches = objPattern.exec( strData )){
+
+            // Get the delimiter that was found.
+            var strMatchedDelimiter = arrMatches[ 1 ];
+
+            // Check to see if the given delimiter has a length
+            // (is not the start of string) and if it matches
+            // field delimiter. If id does not, then we know
+            // that this delimiter is a row delimiter.
+            if (
+                strMatchedDelimiter.length &&
+                strMatchedDelimiter !== strDelimiter
+                ){
+
+                // Since we have reached a new row of data,
+                // add an empty row to our data array.
+                arrData.push( [] );
+
+            }
+
+            var strMatchedValue;
+
+            // Now that we have our delimiter out of the way,
+            // let's check to see which kind of value we
+            // captured (quoted or unquoted).
+            if (arrMatches[ 2 ]){
+
+                // We found a quoted value. When we capture
+                // this value, unescape any double quotes.
+                strMatchedValue = arrMatches[ 2 ].replace(
+                    new RegExp( "\"\"", "g" ),
+                    "\""
+                    );
+
+            } else {
+
+                // We found a non-quoted value.
+                strMatchedValue = arrMatches[ 3 ];
+
+            }
+
+
+            // Now that we have our value string, let's add
+            // it to the data array.
+            arrData[ arrData.length - 1 ].push( strMatchedValue );
+        }
+
+        // Return the parsed data.
+        return( arrData );
+    }
+
 function checkDomain(){
 
 	var dom = new Object();
@@ -127,6 +210,9 @@ function fillAliases(id, Language, Aliases){
 
 	var foundUL = $('#'+id+"_AliasTable").find("ul #"+Language+"_"+id).length;
 	$('#'+id+"_AliasTable").find("ul #"+Language+"_"+id).val(Aliases);
+	$('#'+id+"_AliasTable").find("ul #"+Language+"_"+id).css({
+                'background': '#FFFFFF'
+            });
 	//console.log("DEBUG found ul?:" + foundUL);
 
 }
@@ -475,59 +561,116 @@ $(".custom-file-input").on("change", function() {
 		    var reader = new FileReader();
 		    reader.readAsText(file, "UTF-8");
 		    reader.onload = function (evt) {
-		    	//document.getElementById("DomainLoadFilePicker").text("sdfsdf");
-		    	var DomainInfo = JSON.parse(evt.target.result);
-
-		    	var dName = DomainInfo['name'];
-		    	var dLanguages = DomainInfo['languages'];
-		    	var dFields = DomainInfo['fields'];
-
-		    	//"|"+console.log(dFields);
-
-				$('#domain_name').val(DomainInfo['name']);
-
-		    	for(var lang in dLanguages){
-		    		//console.log("Language: "+dLanguages[lang]);
-					addLanguage(dLanguages[lang]);
-		    	}
 		    	
-		    	for (var field in dFields){
+		    	// If the file is a Taxonomy File, it should be processed separatly
+		    	var Filename = file.name;
+		    	if(Filename.endsWith(".csv")){
+		    		//var MyString = evt.target.result;
+		  
+					var ARR = CSVToArray(evt.target.result,",");
 
-		    		FieldInfo = dFields[field];
-		    		//console.log("DEBUGSDSAD:"+FieldInfo['name']);
+					var RepresentedLanguages = [];
 
-		    		var fname = FieldInfo['name'];
-		    		var ftype = FieldInfo['type'];
-		    		var fformat = FieldInfo['format'];
-		    		var fdefault = FieldInfo['default'];
+					var idx = 0;
+					for (var lang in ARR[0]){
+						if(idx > 3){
+							var LanguageToAdd = ARR[0][lang];
+							addLanguage(LanguageToAdd);
+							RepresentedLanguages.push(LanguageToAdd);
+							//console.log("Adding: "+ARR[0][lang]);
+						}
+						idx++;
+					}
+					for(var idx in ARR){
+						if(idx>0){
 
-		    		var faliases = FieldInfo['aliases'];
+							var FieldInfo = ARR[idx];
+							var FieldName = FieldInfo[0];
+							var FieldType = FieldInfo[1];
+							var FieldKind = FieldInfo[2];
+							var FieldDefault = FieldInfo[3];
+							var ProcFieldDefault = false;
+							var ProcFieldKind = "FORM_FIELD";
 
+							//TABLE_COLUMN_FIELD
+							if(FieldKind == "TC"){ProcFieldKind = "TABLE_COLUMN_FIELD"}
+							if(FieldDefault == "Y"){ProcFieldDefault = true;}
 
-		    		//console.log("DEBUg:"+fname+":"+ftype+":"+fformat+":"+fdefault);
-		    		var FiledID = addField(fname,ftype,fformat,fdefault);
-
-		    		
-
-		    		for (var i in faliases){
-		    			LangAlias = faliases[i];
-
-		    			var AllAliases = "";
-
-		    			aLang = LangAlias['language'];
-		    			aNames = LangAlias['names'];
-		    			for(var j in aNames){
-		    				AllAliases = AllAliases+"|"+aNames[j];
-		    			}
-
-		    			var AllAliases_Corrected = AllAliases.substring(1);
-		    			fillAliases(FiledID,aLang,AllAliases_Corrected);
-		    			//console.log("DEBUG for Alias: "+ aLang+" - ["+AllAliases+"]");
-
-		    		}
+							//console.log(FieldName+","+FieldType+","+ProcFieldKind+","+ProcFieldDefault)
+							var FieldID = addField(FieldName,FieldType,ProcFieldKind,ProcFieldDefault);
 
 
+							for (var lang in RepresentedLanguages){
+
+								var aLang = RepresentedLanguages[lang];
+								var currentAliasIndex = 4+Number(lang);
+								console.log("Index is:"+currentAliasIndex)
+								var AllAliases = FieldInfo[currentAliasIndex];
+								//console.log("DEBUg:"+aLang+":"+FieldID+":"+AllAliases);
+								fillAliases(FieldID,aLang,AllAliases);
+							}
+							
+
+						}
+					}
+
+		    	}else{
+		    				    	// If the file is a standard JSON File:
+			    	var DomainInfo = JSON.parse(evt.target.result);
+
+			    	var dName = DomainInfo['name'];
+			    	var dLanguages = DomainInfo['languages'];
+			    	var dFields = DomainInfo['fields'];
+
+			    	//"|"+console.log(dFields);
+
+					$('#domain_name').val(DomainInfo['name']);
+
+			    	for(var lang in dLanguages){
+			    		//console.log("Language: "+dLanguages[lang]);
+						addLanguage(dLanguages[lang]);
+			    	}
+			    	
+			    	for (var field in dFields){
+
+			    		FieldInfo = dFields[field];
+			    		//console.log("DEBUGSDSAD:"+FieldInfo['name']);
+
+			    		var fname = FieldInfo['name'];
+			    		var ftype = FieldInfo['type'];
+			    		var fformat = FieldInfo['format'];
+			    		var fdefault = FieldInfo['default'];
+
+			    		var faliases = FieldInfo['aliases'];
+
+
+			    		//console.log("DEBUg:"+fname+":"+ftype+":"+fformat+":"+fdefault);
+			    		var FiledID = addField(fname,ftype,fformat,fdefault);
+
+			    		
+
+			    		for (var i in faliases){
+			    			LangAlias = faliases[i];
+
+			    			var AllAliases = "";
+
+			    			aLang = LangAlias['language'];
+			    			aNames = LangAlias['names'];
+			    			for(var j in aNames){
+			    				AllAliases = AllAliases+"|"+aNames[j];
+			    			}
+
+			    			var AllAliases_Corrected = AllAliases.substring(1);
+			    			fillAliases(FiledID,aLang,AllAliases_Corrected);
+			    			//console.log("DEBUG for Alias: "+ aLang+" - ["+AllAliases+"]");
+
+			    		}
+
+
+			    	}
 		    	}
+
+
 
 		        //console.log(evt.target.result);
 		    }
