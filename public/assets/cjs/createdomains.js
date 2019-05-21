@@ -166,7 +166,7 @@ function addAliases(aMap){
 								 //'<input type="text" class="input-xxlarge form-control all_aliases" id="'+IntID+'" >'+ 		
 								 //'<div class="col-xs-12">'+
 								 '<div class="col-sm-10">'+
-								'<input style="display:table-cell; width:100%" type="text" class="input-sm form-control all_aliases" id="'+IntID+'" value="" placeholder="Invoice #|Invoice Number|Invoice N:">'+
+								'<input style="display:table-cell; width:100%; background-color:#FFC2C2" type="text" class="input-sm form-control all_aliases" id="'+IntID+'" value="" placeholder="Invoice #|Invoice Number|Invoice N:">'+
 								'</div>'+
 							'</div>'+
 						'</li>'
@@ -430,7 +430,7 @@ function addLanguage(newLanguage){
 								 //'<input type="text" class="input-xxlarge form-control all_aliases" id="'+IntID+'" >'+ 		
 								 //'<div class="col-xs-12">'+
 								 '<div class="col-sm-10">'+
-								'<input style="display:table-cell; width:100%" type="text" class="input-sm form-control all_aliases" id="'+IntID+'" value="" placeholder="Invoice #|Invoice Number|Invoice N:">'+
+								'<input style="display:table-cell; width:100%; background-color:#FFC2C2" type="text" class="input-sm form-control all_aliases" id="'+IntID+'" value="" placeholder="Invoice #|Invoice Number|Invoice N:">'+
 								'</div>'+
 							'</div>'+
 						'</li>'
@@ -440,11 +440,33 @@ function addLanguage(newLanguage){
 		
 }
 
+
+//$(staticAncestors).on(eventName, dynamicChild, function() {});
+
+
+
 $(document).ready(function(){
 
 setSocketListeners();
 
 socket.emit('get_languages');
+
+// Alias Fields should be redish if empty, white if not empty
+$('#createdomaindiv').on('input', '.all_aliases', function() { 
+	if($(this).val() != ""){
+		jQuery(this).css({
+                'background': '#FFFFFF'
+            });
+	}else{
+		jQuery(this).css({
+                'background': '#FFC2C2'
+            });
+	}
+
+ });
+
+
+
 
 
 $(".custom-file-input").on("change", function() {
@@ -515,6 +537,8 @@ $(".custom-file-input").on("change", function() {
 		    $('#CreateDomainButton').trigger('click');
 		}
 });
+
+
 
 	// live check of Domain Name 
     jQuery('#domain_name').bind('input propertychange', function() {
