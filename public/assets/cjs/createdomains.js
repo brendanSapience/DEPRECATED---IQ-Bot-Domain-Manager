@@ -593,18 +593,18 @@ $(".custom-file-input").on("change", function() {
 							var ProcFieldKind = "FORM_FIELD";
 
 							//TABLE_COLUMN_FIELD
-							if(FieldKind == "TC"){ProcFieldKind = "TABLE_COLUMN_FIELD"}
-							if(FieldDefault == "Y"){ProcFieldDefault = true;}
+							if(FieldKind === "TC"){ProcFieldKind = "TABLE_COLUMN_FIELD"}
+							if(FieldDefault === "Y"){ProcFieldDefault = true;}
 
-							//console.log(FieldName+","+FieldType+","+ProcFieldKind+","+ProcFieldDefault)
-							var FieldID = addField(FieldName,FieldType,ProcFieldKind,ProcFieldDefault);
+							//console.log("Adding Field:"+FieldName+","+FieldType+","+ProcFieldKind+","+ProcFieldDefault)
+							var FieldID = addField(FieldName,ProcFieldKind,FieldType,ProcFieldDefault);
 
 
 							for (var lang in RepresentedLanguages){
 
 								var aLang = RepresentedLanguages[lang];
 								var currentAliasIndex = 4+Number(lang);
-								console.log("Index is:"+currentAliasIndex)
+								//console.log("Index is:"+currentAliasIndex)
 								var AllAliases = FieldInfo[currentAliasIndex];
 								//console.log("DEBUg:"+aLang+":"+FieldID+":"+AllAliases);
 								fillAliases(FieldID,aLang,AllAliases);
