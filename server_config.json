@@ -1,5 +1,5 @@
 {
 	"port":3002,
-	"http_or_https":"https",
+	"http_or_https":"http",
 	"demo_mode":true
 }
