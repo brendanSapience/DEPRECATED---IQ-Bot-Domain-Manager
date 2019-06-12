@@ -198,11 +198,43 @@ function setSocketListeners(){
 	socket.on('server_side_error',function(err){
 		
 		console.log("Error Returned from Server: "+err)
-
+		$("#import_domain_status").text("Error: "+err);
+		$("#import_domain").prop("disabled",false);
 	});
 
 
 };
+
+function getDomainStructure(){
+	$("#import_domain_status").text("");
+	var dom = new Object();
+
+	var CheckDomainNameMsg = checkDomain();
+	var CheckAliasesMsg = checkAliases();
+
+	if(CheckDomainNameMsg == ""){
+		if(CheckAliasesMsg == ""){
+			dom = getJsonStructure();
+
+			
+			var text = JSON.stringify(dom);
+
+			return text;
+		    //var filename = "IQ Bot Domain - "+dom.name+".json";
+		    
+		    //download(filename, text);
+
+		}else{
+			$("#import_domain_status").text(CheckAliasesMsg);
+			return "";
+		}
+
+
+	}else{
+		$("#import_domain_status").text(CheckDomainNameMsg);
+		return "";
+	}
+}
 
 function fillAliases(id, Language, Aliases){
 	//console.log("DEBUG: [" + id+"_AliasTable : "+Language+" : "+Aliases+"]");
@@ -526,6 +558,7 @@ function addLanguage(newLanguage){
 		
 }
 
+function pad2(n) { return n < 10 ? '0' + n : n }
 
 //$(staticAncestors).on(eventName, dynamicChild, function() {});
 
@@ -715,37 +748,34 @@ $(".custom-file-input").on("change", function() {
 
 // When click Export Domain
 $("#create_domain").on("click",function(){
-	$("#import_domain_status").text("");
-	var dom = new Object();
 
-	var CheckDomainNameMsg = checkDomain();
-	var CheckAliasesMsg = checkAliases();
-
-	if(CheckDomainNameMsg == ""){
-		if(CheckAliasesMsg == ""){
-			dom = getJsonStructure();
-
-			
-			var text = JSON.stringify(dom);
-		    var filename = "IQ Bot Domain - "+dom.name+".json";
-		    
-		    download(filename, text);
-
-		}else{
-			$("#import_domain_status").text(CheckAliasesMsg);
-		}
-
-
-	}else{
-		$("#import_domain_status").text(CheckDomainNameMsg);
-	
-
+	var JsonContent = getDomainStructure();
+	if(JsonContent != ""){
+		var DomainName = $('#domain_name').val();
+		var filename = "IQ Bot Domain - "+DomainName+".json";
+		download(filename, JsonContent);
 	}
 //
 });
 
 // When click Export Domain
 $("#import_domain").on("click",function(){
+
+	var JsonContent = getDomainStructure();
+	if(JsonContent != ""){
+
+		var DomainName = $('#domain_name').val();
+		
+
+		var date = new Date();
+
+		var TimeStamp = date.getFullYear().toString() + pad2(date.getMonth() + 1) + pad2( date.getDate()) + pad2( date.getHours() ) + pad2( date.getMinutes() ) + pad2( date.getSeconds() );
+
+
+		var filename = "IQ Bot Domain - "+DomainName+" - "+TimeStamp+".json";
+		download(filename, JsonContent);
+	}
+
 	$("#import_domain_status").text("");
 	var dom = new Object();
 	
