@@ -1,5 +1,14 @@
 # IQ-Bot-Domain-Manager
 
+
+
+## This Repo is Deprecated. For latest source, please use: https://bitbucket.org/aaapjprojects/iq-bot-domain-manager/src/master/
+
+
+
+
+
+
 Domain Creator for Automation Anywhere IQ Bot
 
 _Easily create a custom domain (document type) for IQ Bot. You can directly import your custom domains into IQ Bot or simply generate a domain JSON file_
